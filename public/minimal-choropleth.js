@@ -6,10 +6,10 @@
   // --- Configuration & Constants ---
   const MAP_CONTAINER_ID = '#map';
   
-  // Red monochromatic color scale (dark to light)
-  const DENSITY_COLORS = ["#8B0000", "#B22222", "#DC143C", "#FF4500", "#FF7F50"];
+  // Enhanced contrast monochromatic red scale
+  const DENSITY_COLORS = ["#5C0000", "#8B0000", "#B22222", "#FF8A8A", "#FFC7C7", "#EFEFEF"];
   const DENSITY_BOUNDS = [5, 4, 3, 2, 1, 0]; // Matching bounds for newspaper counts
-  const NO_DATA_COLOR = "#f9f9f9";
+  const NO_DATA_COLOR = "#F8F8F8";
   const BORDER_COLOR = "#ffffff";
 
   // Initial map view centered on Germany - tighter focus
@@ -199,18 +199,21 @@
       .region-popup h3 {
         margin: 0 0 8px 0;
         font-size: 16px;
-        border-bottom: 2px solid #8B0000;
+        border-bottom: 2px solid #5C0000;
         padding-bottom: 4px;
         color: #333;
       }
       .count-badge {
         display: inline-block;
-        background: linear-gradient(to right, #8B0000, #FF7F50);
+        background: linear-gradient(135deg, #800000, #FF5252);
         color: white;
         padding: 4px 8px;
         border-radius: 12px;
         font-size: 12px;
         margin-bottom: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.2);
       }
       .newspaper-list {
         max-height: 200px;
@@ -238,7 +241,7 @@
         display: inline-block;
         margin-top: 4px;
         text-decoration: none;
-        color: #8B0000;
+        color: #5C0000;
         font-weight: bold;
       }
       .newspaper-link:hover {
