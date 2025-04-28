@@ -46,17 +46,24 @@
     // Check if this is a Bundesland (federal state) - we want to make these transparent
     const isBundesland = feature.properties.type === "bundesland";
     
-    // Debug log for Berlin
-    if (feature.properties.name === "Berlin") {
-      console.log("Styling Berlin:", feature.properties);
-    }
-    
-    // Get newspaper count for this region from actual data
+    // Get region info
     const ags = feature.properties.ags;
     const regionName = feature.properties.name;
     let value = 0;
     
-    if (ags && zeitungsData[ags]) {
+    // SPECIAL CASE: Explicitly handle Berlin
+    if (regionName === "Berlin") {
+      // Force Berlin to use AGS 11000
+      const berlinData = zeitungsData["11000"];
+      if (berlinData) {
+        value = berlinData.count;
+        console.log(`Berlin styling: Setting newspaper count to ${value} from zeitungsData[11000]`);
+      } else {
+        console.error("ERROR: Berlin data not found in zeitungsData!");
+      }
+    }
+    // Normal case for other regions
+    else if (ags && zeitungsData[ags]) {
       value = zeitungsData[ags].count;
       
       // Debug info for specific regions
@@ -100,6 +107,44 @@
     const ags = feature.properties.ags;
     const regionName = feature.properties.name || "Unbekannte Region";
     
+    // SPECIAL CASE: Explicitly handle Berlin
+    if (regionName === "Berlin") {
+      const berlinData = zeitungsData["11000"];
+      if (berlinData) {
+        const count = berlinData.count;
+        let newspapersList = '';
+        
+        if (berlinData.zeitungen && berlinData.zeitungen.length > 0) {
+          newspapersList = '<div class="newspaper-list">';
+          berlinData.zeitungen.forEach(zeitung => {
+            const website = zeitung.website 
+              ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>` 
+              : '';
+            
+            newspapersList += `
+              <div class="newspaper-item">
+                <div class="newspaper-name">${zeitung.name}</div>
+                <div class="newspaper-details">
+                  ${zeitung.verlag || ''} ${zeitung.erscheinungsort ? `(${zeitung.erscheinungsort})` : ''}
+                  ${website}
+                </div>
+              </div>
+            `;
+          });
+          newspapersList += '</div>';
+        }
+        
+        return `
+          <div class="region-popup">
+            <h3>Berlin</h3>
+            <div class="count-badge">${count} ${count === 1 ? 'Zeitung' : 'Zeitungen'}</div>
+            ${newspapersList}
+          </div>
+        `;
+      }
+    }
+    
+    // Normal case for other regions
     if (!ags || !zeitungsData[ags]) {
       return `
         <div class="region-popup">
@@ -284,32 +329,48 @@
       zoomControl: false
     });
     
-    // Pre-process the data to ensure Berlin is shown as a unified entity
-    // Filter out any individual Berlin districts that might exist
-    let processedFeatures = geoJsonData.features.filter(f => 
-      !(f.properties.type === "bezirk" && f.properties.name.includes("Berlin-")));
+    // ULTRA AGGRESSIVE Berlin handling - completely remove ALL Berlin districts
+    console.log("Original feature count:", geoJsonData.features.length);
     
-    // Find indices of Berlin entries (both as Bundesland and Landkreis)
-    const berlinIndices = processedFeatures
-      .map((f, index) => f.properties.name === "Berlin" ? index : -1)
-      .filter(index => index !== -1);
-      
-    console.log("Berlin indices found:", berlinIndices);
+    // First, find the main Berlin feature with AGS 11000
+    const mainBerlinFeature = geoJsonData.features.find(f => 
+      f.properties.name === "Berlin" && f.properties.ags === "11000");
     
-    // Keep only the Berlin with ags=11000 (Landkreis/kreisfreie Stadt)
-    if (berlinIndices.length > 1) {
-      // Find the one with ags = 11000
-      const berlinWithCorrectAgs = processedFeatures.findIndex(f => 
-        f.properties.name === "Berlin" && f.properties.ags === "11000");
+    if (!mainBerlinFeature) {
+      console.error("CRITICAL: Couldn't find main Berlin feature with AGS 11000!");
+    } else {
+      console.log("Found main Berlin with properties:", mainBerlinFeature.properties);
       
-      if (berlinWithCorrectAgs !== -1) {
-        // Keep only this one, filter out the bundesland version
-        processedFeatures = processedFeatures.filter((f, index) => 
-          !(f.properties.name === "Berlin" && f.properties.ags !== "11000"));
-          
-        console.log("Kept Berlin with AGS 11000, filtered out other versions");
-      }
+      // Ensure it has the correct type
+      mainBerlinFeature.properties.type = "kreisfreie Stadt";
     }
+    
+    // Now extremely aggressively filter out ALL Berlin-related entities EXCEPT the main one
+    let processedFeatures = geoJsonData.features.filter(feature => {
+      const props = feature.properties || {};
+      const name = props.name || "";
+      const ags = props.ags || "";
+      const partof = props.partof || "";
+      const type = props.type || "";
+      
+      // Check if this is Berlin-related in ANY way, but not the main Berlin
+      const isBerlinRelated = (
+        // Check name contains Berlin but is not exactly "Berlin" with AGS 11000
+        (name.includes("Berlin") && !(name === "Berlin" && ags === "11000")) ||
+        // Check if part of Berlin
+        partof.includes("Berlin") ||
+        // Check if it's a district or borough of Berlin
+        (type === "bezirk" || type === "stadtteil") ||
+        // Check AGS - any 11xxx except 11000
+        (ags.startsWith("11") && ags !== "11000")
+      );
+      
+      // Keep if NOT Berlin-related OR if it's the main Berlin
+      return !isBerlinRelated || (name === "Berlin" && ags === "11000");
+    });
+    
+    console.log("After Berlin filtering - feature count:", processedFeatures.length, 
+                "Removed:", geoJsonData.features.length - processedFeatures.length);
     
     // Update the original geoData variable with our processed version
     window.geoData.features = processedFeatures;
