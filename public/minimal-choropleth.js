@@ -12,15 +12,16 @@
   const NO_DATA_COLOR = "#f9f9f9";
   const BORDER_COLOR = "#ffffff";
 
-  // Initial map view centered on Germany
+  // Initial map view centered on Germany - tighter focus
   const INITIAL_VIEW = {
     bounds: [
-      [46.57, 5.71],
-      [55.54, 15.13]
+      [47.27, 5.87],  // Southwest coordinates - narrower focus
+      [54.94, 15.02]  // Northeast coordinates - narrower focus
     ],
+    center: [51.1657, 10.4515], // Center of Germany
     minZoom: 1,
     maxZoom: 11,
-    defaultZoom: 4.0  // Very slightly reduced zoom level
+    defaultZoom: 6.5  // Much tighter zoom level
   };
 
   // --- Styling Logic ---
@@ -46,7 +47,7 @@
     return {
       fillColor: fillColor,
       fillOpacity: 1,
-      color: '#ffffff',  // White borders
+      color: BORDER_COLOR,  // White borders
       weight: 0.7,       // Slightly thicker borders
       opacity: 1
     };
@@ -71,37 +72,37 @@
     assignPlaceholderData(geoJsonData.features);
     
     // Create the basic Leaflet map
-    const map = L.map(MAP_CONTAINER_ID.substring(1), {
-      minZoom: INITIAL_VIEW.minZoom,
-      maxZoom: INITIAL_VIEW.maxZoom,
-      zoomControl: false,
-      attributionControl: false,
-      dragging: false,
+    const map = L.map(MAP_CONTAINER_ID.slice(1), {
+      minZoom : INITIAL_VIEW.minZoom,
+      maxZoom : INITIAL_VIEW.maxZoom,
+      zoomSnap: 0.1,        // keep fractional zoom support
+      zoomDelta: 0.5,
+      dragging : false,
       scrollWheelZoom: false,
-      zoomSnap: 1.0, // Force integer zoom levels
-      zoomDelta: 1.0 // Standard zoom increments
+      attributionControl: false,
+      zoomControl: false
     });
     
     // Add the GeoJSON layer
     L.geoJSON(geoJsonData, {
-      style: geoJsonStyle,
-      onEachFeature: function(feature, layer) {
-        // No interactive features as per minimal requirements
-      }
+      style: geoJsonStyle
     }).addTo(map);
     
-    // Use a fixed zoom level that works well
-    const zoomLevel = 5.5;
+    // Fit the map to the initial view bounds with some padding and maxZoom
+    map.fitBounds(INITIAL_VIEW.bounds, {
+      padding: [5, 5], // add a little breathing space
+      maxZoom: 8.0,      // never zoom tighter than this
+      animate: false     // no pan animation for a “static” map
+    });
     
-    // Move center point significantly north to show more northern regions
-    map.setView([52.5, 10.452], zoomLevel);
-    
-    // Log for debugging
-    console.log(`Using integer zoom level: ${zoomLevel} to avoid Leaflet zoom bugs`);
-    
-    console.log("Minimal Choropleth Map Initialized");
-  }
+    // Fix potential size issues by automatically updating the map on window resize
+    window.addEventListener('resize', function() {
+      map.invalidateSize();
+    });
 
+    // Log for debugging
+    console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
+  }
   // --- Data Loading & Execution ---
   function loadData() {
     try {
