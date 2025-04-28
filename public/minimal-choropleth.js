@@ -168,6 +168,23 @@
       .newspaper-link:hover {
         text-decoration: underline;
       }
+      
+      /* Fix popup positioning issues */
+      .leaflet-popup {
+        position: absolute;
+        margin-bottom: 20px;
+        z-index: 1000;
+      }
+      
+      .leaflet-popup-content-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+      }
+      
+      /* Prevent popups from affecting layout */
+      .leaflet-container {
+        overflow: visible !important;
+      }
     `;
     document.head.appendChild(styleElement);
   }
@@ -226,7 +243,8 @@
             const popupContent = createPopupContent(feature);
             layer.bindPopup(popupContent, {
               maxWidth: 320,
-              className: 'newspaper-popup'
+              className: 'newspaper-popup',
+              autoPan: false // Prevent map from panning when popup opens
             });
             
             // Add hover and click effects
@@ -277,60 +295,33 @@
   
   // --- Update Region Detail Panel ---
   function updateRegionDetailPanel(feature) {
-    const detailPanel = document.querySelector('#region-detail');
     const detailTitle = document.querySelector('#detail-title');
-    if (!detailPanel || !detailTitle) return;
+    if (!detailTitle) return;
     
     if (!feature || !feature.properties) {
-      detailTitle.textContent = "Fahre mit der Maus auf eine Region, um die Lokalzeitungen an zu zeigen.";
+      detailTitle.textContent = "Fahre mit der Maus auf eine Region, um Details anzuzeigen";
       return;
     }
     
-    const ags = feature.properties.ags;
     const regionName = feature.properties.name || "Unbekannte Region";
+    const ags = feature.properties.ags;
     
-    if (!ags || !zeitungsData[ags] || !zeitungsData[ags].zeitungen) {
-      detailTitle.textContent = `${regionName} - Keine Zeitungsdaten verfügbar`;
-      return;
+    // Just update the title with region name
+    if (ags && zeitungsData[ags]) {
+      const count = zeitungsData[ags].count;
+      detailTitle.textContent = `${regionName} (${count} ${count === 1 ? 'Zeitung' : 'Zeitungen'})`;
+    } else {
+      detailTitle.textContent = regionName;
     }
     
-    // Update title with region name
-    detailTitle.textContent = regionName;
-    
-    // Create content section if it doesn't exist
-    let contentSection = detailPanel.querySelector('.detail-content');
-    if (!contentSection) {
-      contentSection = document.createElement('div');
-      contentSection.className = 'detail-content';
-      detailPanel.appendChild(contentSection);
+    // Remove any existing content section to keep only the banner
+    const detailPanel = document.querySelector('#region-detail');
+    if (detailPanel) {
+      const contentSection = detailPanel.querySelector('.detail-content');
+      if (contentSection) {
+        contentSection.remove();
+      }
     }
-    
-    const regionData = zeitungsData[ags];
-    const count = regionData.count;
-    
-    let newspapersList = '';
-    if (regionData.zeitungen && regionData.zeitungen.length > 0) {
-      newspapersList = '<div class="data-grid">';
-      regionData.zeitungen.forEach(zeitung => {
-        newspapersList += `
-          <div class="data-item">
-            <div class="data-label">Zeitung</div>
-            <div class="data-value">${zeitung.name}</div>
-            ${zeitung.website ? 
-              `<a href="${zeitung.website}" target="_blank" class="newspaper-link">Zur Website <span class="arrow">→</span></a>` : 
-              ''}
-          </div>
-        `;
-      });
-      newspapersList += '</div>';
-    }
-    
-    contentSection.innerHTML = `
-      <div class="detail-summary">
-        Diese Region verfügt über ${count} ${count === 1 ? 'Tageszeitung' : 'Tageszeitungen'}.
-      </div>
-      ${newspapersList}
-    `;
   }
 
   // --- Data Loading & Execution ---
