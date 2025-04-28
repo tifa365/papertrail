@@ -43,18 +43,44 @@
   }
 
   function geoJsonStyle(feature) {
+    // Check if this is a Bundesland (federal state) - we want to make these transparent
+    const isBundesland = feature.properties.type === "bundesland";
+    
     // Get newspaper count for this region from actual data
     const ags = feature.properties.ags;
+    const regionName = feature.properties.name;
     let value = 0;
     
     if (ags && zeitungsData[ags]) {
       value = zeitungsData[ags].count;
+      
+      // Debug info for specific regions
+      if (regionName === "Wartburgkreis") {
+        console.log(`Wartburgkreis (AGS: ${ags}) has newspaper count: ${value}`);
+      }
+    } else {
+      // Log missing data for important regions
+      if (regionName === "Wartburgkreis") {
+        console.warn(`Wartburgkreis (AGS: ${ags}) has NO newspaper data!`);
+      }
     }
     
     // Store the value in the feature properties for later use
     feature.properties.newspaperCount = value;
     const fillColor = getColorFromScale(value);
 
+    // Make Bundesländer transparent but keep borders
+    if (isBundesland) {
+      return {
+        fillColor: 'transparent',
+        fillOpacity: 0,  // Transparent fill
+        color: '#CCC',   // Light gray borders for states
+        weight: 1,       // Slightly thicker borders
+        opacity: 0.5     // Semi-transparent borders
+      };
+    }
+    
+    // Regular styling for Landkreise
     return {
       fillColor: fillColor,
       fillOpacity: 1,
@@ -218,6 +244,14 @@
       }
       zeitungsData = await response.json();
       console.log("Newspaper data loaded successfully", Object.keys(zeitungsData).length);
+      
+      // Debug: Check specifically for Wartburgkreis data
+      if (zeitungsData["16063"]) {
+        console.log("Wartburgkreis data found:", zeitungsData["16063"]);
+      } else {
+        console.log("Wartburgkreis data missing!");
+      }
+      
       return true;
     } catch (error) {
       console.error("Error loading newspaper data:", error);
@@ -245,63 +279,81 @@
       zoomControl: false
     });
     
-    // Add the GeoJSON layer with interactive elements
-    L.geoJSON(geoJsonData, {
+    // Separate data into Bundesländer and Landkreise
+    const bundeslaenderFeatures = geoJsonData.features.filter(f => f.properties.type === "bundesland");
+    const landkreiseFeatures = geoJsonData.features.filter(f => f.properties.type !== "bundesland");
+    
+    // Create copies of geoJSON structure with separated features
+    const bundeslaenderData = {
+      ...geoJsonData,
+      features: bundeslaenderFeatures
+    };
+    
+    const landkreiseData = {
+      ...geoJsonData,
+      features: landkreiseFeatures
+    };
+    
+    // Add Bundesländer layer first (in the background)
+    const bundeslaenderLayer = L.geoJSON(bundeslaenderData, {
+      style: geoJsonStyle,
+      interactive: false // No interaction with Bundesländer
+    }).addTo(map);
+    
+    // Add Landkreise layer on top with interactivity
+    const landkreiseLayer = L.geoJSON(landkreiseData, {
       style: geoJsonStyle,
       onEachFeature: function(feature, layer) {
         if (feature.properties) {
-          // Only add interactivity to Landkreise (regions), not Bundesländer (states)
-          if (feature.properties.type !== "bundesland") {
-            // Create tooltip
-            layer.bindTooltip(feature.properties.name, {
-              permanent: false,
-              direction: 'top',
-              className: 'region-tooltip'
-            });
-            
-            // Create popup
-            const popupContent = createPopupContent(feature);
-            
-            // Get region name to check if it's a northern region
-            const regionName = feature.properties.name || "";
-            const isNorthernRegion = /Nord|friesland|schleswig|holstein|hamburg|kiel|flensburg|lübeck/i.test(regionName);
-            
-            // Add special offset for northern regions to prevent popups from being cut off
-            const popupOptions = {
-              maxWidth: 320,
-              className: isNorthernRegion ? 'newspaper-popup northern-popup' : 'newspaper-popup',
-              autoPan: false, // Prevent map from panning when popup opens
-              offset: isNorthernRegion ? [0, -25] : [0, 0] // Offset popup for northern regions
-            };
-            
-            layer.bindPopup(popupContent, popupOptions);
-            
-            // Add hover and click effects
-            layer.on({
-              mouseover: function(e) {
-                const layer = e.target;
-                layer.setStyle({
-                  weight: 1.5,
-                  fillOpacity: 0.8
-                });
-                layer.bringToFront();
-                
-                // Update the region detail panel on hover
-                updateRegionDetailPanel(feature);
-              },
-              mouseout: function(e) {
-                const layer = e.target;
-                layer.setStyle({
-                  weight: 0.7,
-                  fillOpacity: 1
-                });
-              },
-              click: function(e) {
-                // On click, update the region detail panel and open popup
-                updateRegionDetailPanel(feature);
-              }
-            });
-          }
+          // Create tooltip
+          layer.bindTooltip(feature.properties.name, {
+            permanent: false,
+            direction: 'top',
+            className: 'region-tooltip'
+          });
+          
+          // Create popup
+          const popupContent = createPopupContent(feature);
+          
+          // Get region name to check if it's a northern region
+          const regionName = feature.properties.name || "";
+          const isNorthernRegion = /Nord|friesland|schleswig|holstein|hamburg|kiel|flensburg|lübeck/i.test(regionName);
+          
+          // Add special offset for northern regions to prevent popups from being cut off
+          const popupOptions = {
+            maxWidth: 320,
+            className: isNorthernRegion ? 'newspaper-popup northern-popup' : 'newspaper-popup',
+            autoPan: false, // Prevent map from panning when popup opens
+            offset: isNorthernRegion ? [0, -25] : [0, 0] // Offset popup for northern regions
+          };
+          
+          layer.bindPopup(popupContent, popupOptions);
+          
+          // Add hover and click effects
+          layer.on({
+            mouseover: function(e) {
+              const layer = e.target;
+              layer.setStyle({
+                weight: 1.5,
+                fillOpacity: 0.8
+              });
+              layer.bringToFront();
+              
+              // Update the region detail panel on hover
+              updateRegionDetailPanel(feature);
+            },
+            mouseout: function(e) {
+              const layer = e.target;
+              layer.setStyle({
+                weight: 0.7,
+                fillOpacity: 1
+              });
+            },
+            click: function(e) {
+              // On click, update the region detail panel and open popup
+              updateRegionDetailPanel(feature);
+            }
+          });
         }
       }
     }).addTo(map);
