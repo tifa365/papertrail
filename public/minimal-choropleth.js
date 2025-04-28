@@ -280,8 +280,14 @@
     });
     
     // Separate data into Bundesländer and Landkreise
-    const bundeslaenderFeatures = geoJsonData.features.filter(f => f.properties.type === "bundesland");
-    const landkreiseFeatures = geoJsonData.features.filter(f => f.properties.type !== "bundesland");
+    // Filter out Berlin as Bundesland (we'll use only the Landkreis version)
+    const bundeslaenderFeatures = geoJsonData.features.filter(f => 
+      f.properties.type === "bundesland" && f.properties.name !== "Berlin");
+    
+    // Make sure Berlin is only shown as a unified district
+    const landkreiseFeatures = geoJsonData.features.filter(f => 
+      f.properties.type !== "bundesland" || 
+      (f.properties.type === "bundesland" && f.properties.name === "Berlin"));
     
     // Create copies of geoJSON structure with separated features
     const bundeslaenderData = {
@@ -299,6 +305,16 @@
       style: geoJsonStyle,
       interactive: false // No interaction with Bundesländer
     }).addTo(map);
+    
+    // Ensure Berlin has the correct properties for display
+    landkreiseData.features.forEach(feature => {
+      if (feature.properties.name === "Berlin") {
+        // Set Berlin's type explicitly to "kreisfreie Stadt"
+        feature.properties.type = "kreisfreie Stadt";
+        // Make sure it has the correct AGS code
+        feature.properties.ags = "11000";
+      }
+    });
     
     // Add Landkreise layer on top with interactivity
     const landkreiseLayer = L.geoJSON(landkreiseData, {
