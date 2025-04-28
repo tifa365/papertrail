@@ -1,0 +1,41 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import SearchBox from "../components/SearchBox.astro";
+import GermanyMap from "../components/GermanyMap.astro";
+import RegionDetail from "../components/RegionDetail.astro";
+import Legend from "../components/Legend.astro";
+import TopRegions from "../components/TopRegions.astro";
+
+// Page metadata
+const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
+---
+
+<MainLayout title={pageTitle}>
+  <style is:global>
+    @import "../styles/global.css";
+  </style>
+
+  <div class="papertrail-container">
+    <!-- Header - NYT Data Viz Style -->
+    <div class="header">
+      <div class="header-left">
+        <h1>Papertrail</h1>
+        <div class="subtitle">LOKALE TAGESZEITUNGEN IN DEINEM LANDKREIS</div>
+        <div class="divider"></div>
+      </div>
+      <SearchBox />
+    </div>
+
+    <!-- Detail panel for selected region -->
+    <RegionDetail />
+
+    <!-- Map Container -->
+    <GermanyMap />
+
+    <!-- Bottom section - Top Regions -->
+    <div class="columns">
+      <!-- Top Regions (full width) -->
+      <TopRegions />
+    </div>
+  </div>
+</MainLayout>
