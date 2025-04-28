@@ -46,6 +46,11 @@
     // Check if this is a Bundesland (federal state) - we want to make these transparent
     const isBundesland = feature.properties.type === "bundesland";
     
+    // Debug log for Berlin
+    if (feature.properties.name === "Berlin") {
+      console.log("Styling Berlin:", feature.properties);
+    }
+    
     // Get newspaper count for this region from actual data
     const ags = feature.properties.ags;
     const regionName = feature.properties.name;
@@ -279,15 +284,43 @@
       zoomControl: false
     });
     
-    // Separate data into Bundesländer and Landkreise
-    // Filter out Berlin as Bundesland (we'll use only the Landkreis version)
-    const bundeslaenderFeatures = geoJsonData.features.filter(f => 
+    // Pre-process the data to ensure Berlin is shown as a unified entity
+    // Filter out any individual Berlin districts that might exist
+    let processedFeatures = geoJsonData.features.filter(f => 
+      !(f.properties.type === "bezirk" && f.properties.name.includes("Berlin-")));
+    
+    // Find indices of Berlin entries (both as Bundesland and Landkreis)
+    const berlinIndices = processedFeatures
+      .map((f, index) => f.properties.name === "Berlin" ? index : -1)
+      .filter(index => index !== -1);
+      
+    console.log("Berlin indices found:", berlinIndices);
+    
+    // Keep only the Berlin with ags=11000 (Landkreis/kreisfreie Stadt)
+    if (berlinIndices.length > 1) {
+      // Find the one with ags = 11000
+      const berlinWithCorrectAgs = processedFeatures.findIndex(f => 
+        f.properties.name === "Berlin" && f.properties.ags === "11000");
+      
+      if (berlinWithCorrectAgs !== -1) {
+        // Keep only this one, filter out the bundesland version
+        processedFeatures = processedFeatures.filter((f, index) => 
+          !(f.properties.name === "Berlin" && f.properties.ags !== "11000"));
+          
+        console.log("Kept Berlin with AGS 11000, filtered out other versions");
+      }
+    }
+    
+    // Update the original geoData variable with our processed version
+    window.geoData.features = processedFeatures;
+    
+    // Now separate into Bundesländer and Landkreise as before
+    const bundeslaenderFeatures = processedFeatures.filter(f => 
       f.properties.type === "bundesland" && f.properties.name !== "Berlin");
     
-    // Make sure Berlin is only shown as a unified district
-    const landkreiseFeatures = geoJsonData.features.filter(f => 
+    const landkreiseFeatures = processedFeatures.filter(f => 
       f.properties.type !== "bundesland" || 
-      (f.properties.type === "bundesland" && f.properties.name === "Berlin"));
+      (f.properties.name === "Berlin" && f.properties.ags === "11000"));
     
     // Create copies of geoJSON structure with separated features
     const bundeslaenderData = {
@@ -306,15 +339,17 @@
       interactive: false // No interaction with Bundesländer
     }).addTo(map);
     
-    // Ensure Berlin has the correct properties for display
-    landkreiseData.features.forEach(feature => {
-      if (feature.properties.name === "Berlin") {
-        // Set Berlin's type explicitly to "kreisfreie Stadt"
-        feature.properties.type = "kreisfreie Stadt";
-        // Make sure it has the correct AGS code
-        feature.properties.ags = "11000";
-      }
-    });
+    // Find the Berlin entry in the Landkreise data and ensure it has the correct properties
+    const berlinFeature = landkreiseData.features.find(f => f.properties.name === "Berlin");
+    if (berlinFeature) {
+      console.log("Berlin feature found in landkreiseData, updating properties");
+      // Set Berlin's type explicitly to "kreisfreie Stadt"
+      berlinFeature.properties.type = "kreisfreie Stadt";
+      // Make sure it has the correct AGS code
+      berlinFeature.properties.ags = "11000";
+    } else {
+      console.warn("Berlin feature not found in landkreiseData!");
+    }
     
     // Add Landkreise layer on top with interactivity
     const landkreiseLayer = L.geoJSON(landkreiseData, {
