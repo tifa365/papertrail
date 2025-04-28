@@ -41,9 +41,15 @@
 <script is:inline src="/minimal-choropleth.js"></script>
 
 <style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
   #map {
     width: 100%;
-    height: 600px;
+    height: 100%;
     background-color: white;
   }
 
@@ -56,13 +62,14 @@
   .map-container {
     border: none !important;
   }
-  
+
   /* Map with legend layout */
   .map-with-legend {
     position: relative;
     width: 100%;
+    height: 100%;
   }
-  
+
   /* Legend styling */
   .map-legend {
     position: absolute;
@@ -72,23 +79,23 @@
     background-color: white;
     padding: 12px;
     border-radius: 6px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
     max-width: 180px;
     font-size: 0.85rem;
   }
-  
+
   .legend-title {
     font-weight: bold;
     margin-bottom: 8px;
     font-size: 0.9rem;
   }
-  
+
   .map-legend .legend-item {
     display: flex;
     align-items: center;
     margin-bottom: 6px;
   }
-  
+
   .map-legend .color-box {
     width: 16px;
     height: 16px;
