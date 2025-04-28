@@ -48,7 +48,9 @@ h1 {
   height: 100vh;
   min-height: 600px;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to allow popups to extend beyond the container */
+  padding-top: 30px; /* Add padding at the top to prevent popups from being cut off */
+  padding-bottom: 30px; /* Add padding at the bottom for consistency */
 }
 
 .germany-map {

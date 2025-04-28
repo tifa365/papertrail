@@ -195,6 +195,16 @@
       .newspaper-popup {
         margin-top: -30px; /* Lift popups higher above the region */
       }
+      
+      /* Special styling for northern regions */
+      .northern-popup {
+        margin-top: -60px !important; /* Lift northern popups even higher */
+      }
+      
+      /* Ensure popups for Nordfriesland are visible */
+      .northern-popup .leaflet-popup-content-wrapper {
+        margin-bottom: 15px;
+      }
     `;
     document.head.appendChild(styleElement);
   }
@@ -251,11 +261,20 @@
             
             // Create popup
             const popupContent = createPopupContent(feature);
-            layer.bindPopup(popupContent, {
+            
+            // Get region name to check if it's a northern region
+            const regionName = feature.properties.name || "";
+            const isNorthernRegion = /Nord|friesland|schleswig|holstein|hamburg|kiel|flensburg|lübeck/i.test(regionName);
+            
+            // Add special offset for northern regions to prevent popups from being cut off
+            const popupOptions = {
               maxWidth: 320,
-              className: 'newspaper-popup',
-              autoPan: false // Prevent map from panning when popup opens
-            });
+              className: isNorthernRegion ? 'newspaper-popup northern-popup' : 'newspaper-popup',
+              autoPan: false, // Prevent map from panning when popup opens
+              offset: isNorthernRegion ? [0, -25] : [0, 0] // Offset popup for northern regions
+            };
+            
+            layer.bindPopup(popupContent, popupOptions);
             
             // Add hover and click effects
             layer.on({
