@@ -172,8 +172,8 @@
       /* Fix popup positioning issues */
       .leaflet-popup {
         position: absolute;
-        margin-bottom: 20px;
-        z-index: 1000;
+        margin-bottom: 30px;
+        z-index: 9999 !important;
       }
       
       .leaflet-popup-content-wrapper {
@@ -184,6 +184,16 @@
       /* Prevent popups from affecting layout */
       .leaflet-container {
         overflow: visible !important;
+      }
+      
+      /* Ensure popup tips are visible */
+      .leaflet-popup-tip-container {
+        z-index: 9999 !important;
+        pointer-events: none;
+      }
+      
+      .newspaper-popup {
+        margin-top: -30px; /* Lift popups higher above the region */
       }
     `;
     document.head.appendChild(styleElement);
