@@ -24,6 +24,9 @@
     defaultZoom: 6.5  // Much tighter zoom level
   };
 
+  // Store newspaper data globally
+  let zeitungsData = {};
+
   // --- Styling Logic ---
   function getColorFromScale(value) {
     if (value === null || value === undefined) {
@@ -40,8 +43,16 @@
   }
 
   function geoJsonStyle(feature) {
-    // Assign placeholder values for demonstration
-    const value = feature.properties.placeholderValue;
+    // Get newspaper count for this region from actual data
+    const ags = feature.properties.ags;
+    let value = 0;
+    
+    if (ags && zeitungsData[ags]) {
+      value = zeitungsData[ags].count;
+    }
+    
+    // Store the value in the feature properties for later use
+    feature.properties.newspaperCount = value;
     const fillColor = getColorFromScale(value);
 
     return {
@@ -53,23 +64,137 @@
     };
   }
 
-  // --- Placeholder Data Generation ---
-  function assignPlaceholderData(features) {
-    features.forEach(feature => {
-      if (feature.properties) {
-        // Generate a random value between 0 and 5
-        const value = Math.floor(Math.random() * 6);
-        feature.properties.placeholderValue = value;
-      } else {
-        feature.properties = { placeholderValue: null };
+  // --- Create Popup Content ---
+  function createPopupContent(feature) {
+    const ags = feature.properties.ags;
+    const regionName = feature.properties.name || "Unbekannte Region";
+    
+    if (!ags || !zeitungsData[ags]) {
+      return `
+        <div class="region-popup">
+          <h3>${regionName}</h3>
+          <p>Keine Zeitungsdaten verfügbar</p>
+        </div>
+      `;
+    }
+    
+    const regionData = zeitungsData[ags];
+    const count = regionData.count;
+    
+    let newspapersList = '';
+    if (regionData.zeitungen && regionData.zeitungen.length > 0) {
+      newspapersList = '<div class="newspaper-list">';
+      regionData.zeitungen.forEach(zeitung => {
+        const website = zeitung.website 
+          ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>` 
+          : '';
+        
+        newspapersList += `
+          <div class="newspaper-item">
+            <div class="newspaper-name">${zeitung.name}</div>
+            <div class="newspaper-details">
+              ${zeitung.verlag || ''} ${zeitung.erscheinungsort ? `(${zeitung.erscheinungsort})` : ''}
+              ${website}
+            </div>
+          </div>
+        `;
+      });
+      newspapersList += '</div>';
+    }
+    
+    return `
+      <div class="region-popup">
+        <h3>${regionName}</h3>
+        <div class="count-badge">${count} ${count === 1 ? 'Zeitung' : 'Zeitungen'}</div>
+        ${newspapersList}
+      </div>
+    `;
+  }
+
+  // --- Create Popup Style ---
+  function addPopupStyles() {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .region-popup {
+        font-family: 'Libre Baskerville', Georgia, serif;
+        padding: 8px;
+        max-width: 300px;
       }
-    });
+      .region-popup h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        border-bottom: 2px solid #8B0000;
+        padding-bottom: 4px;
+        color: #333;
+      }
+      .count-badge {
+        display: inline-block;
+        background: linear-gradient(to right, #8B0000, #FF7F50);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .newspaper-list {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .newspaper-item {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px dotted #eee;
+      }
+      .newspaper-item:last-child {
+        border-bottom: none;
+      }
+      .newspaper-name {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+      }
+      .newspaper-details {
+        font-size: 12px;
+        color: #666;
+        margin-top: 3px;
+      }
+      .newspaper-link {
+        display: inline-block;
+        margin-top: 4px;
+        text-decoration: none;
+        color: #8B0000;
+        font-weight: bold;
+      }
+      .newspaper-link:hover {
+        text-decoration: underline;
+      }
+    `;
+    document.head.appendChild(styleElement);
+  }
+
+  // --- Load Newspaper Data ---
+  async function loadNewspaperData() {
+    try {
+      const response = await fetch('/zeitungen_by_ags.json');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      zeitungsData = await response.json();
+      console.log("Newspaper data loaded successfully", Object.keys(zeitungsData).length);
+      return true;
+    } catch (error) {
+      console.error("Error loading newspaper data:", error);
+      return false;
+    }
   }
 
   // --- Map Initialization ---
-  function initializeMap(geoJsonData) {
-    // Assign placeholder data for demonstration
-    assignPlaceholderData(geoJsonData.features);
+  async function initializeMap(geoJsonData) {
+    // Load newspaper data first
+    await loadNewspaperData();
+    
+    // Add custom popup styles
+    addPopupStyles();
     
     // Create the basic Leaflet map
     const map = L.map(MAP_CONTAINER_ID.slice(1), {
@@ -83,16 +208,55 @@
       zoomControl: false
     });
     
-    // Add the GeoJSON layer
+    // Add the GeoJSON layer with interactive elements
     L.geoJSON(geoJsonData, {
-      style: geoJsonStyle
+      style: geoJsonStyle,
+      onEachFeature: function(feature, layer) {
+        if (feature.properties) {
+          // Only add interactivity to Landkreise (regions), not Bundesländer (states)
+          if (feature.properties.type !== "bundesland") {
+            // Create tooltip
+            layer.bindTooltip(feature.properties.name, {
+              permanent: false,
+              direction: 'top',
+              className: 'region-tooltip'
+            });
+            
+            // Create popup
+            const popupContent = createPopupContent(feature);
+            layer.bindPopup(popupContent, {
+              maxWidth: 320,
+              className: 'newspaper-popup'
+            });
+            
+            // Add hover effect
+            layer.on({
+              mouseover: function(e) {
+                const layer = e.target;
+                layer.setStyle({
+                  weight: 1.5,
+                  fillOpacity: 0.8
+                });
+                layer.bringToFront();
+              },
+              mouseout: function(e) {
+                const layer = e.target;
+                layer.setStyle({
+                  weight: 0.7,
+                  fillOpacity: 1
+                });
+              }
+            });
+          }
+        }
+      }
     }).addTo(map);
     
-    // Fit the map to the initial view bounds with some padding and maxZoom
+    // Use a fixed center and zoom for more control over the map size
     map.fitBounds(INITIAL_VIEW.bounds, {
-      padding: [5, 5], // add a little breathing space
-      maxZoom: 8.0,      // never zoom tighter than this
-      animate: false     // no pan animation for a “static” map
+      padding: [5, 5],
+      maxZoom: 8.0,
+      animate: false
     });
     
     // Fix potential size issues by automatically updating the map on window resize
@@ -100,16 +264,70 @@
       map.invalidateSize();
     });
 
+    // Update region details panel with first region that has data
+    updateRegionDetailPanel();
+    
     // Log for debugging
     console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
   }
+  
+  // --- Update Region Detail Panel ---
+  function updateRegionDetailPanel() {
+    const detailPanel = document.querySelector('.region-detail');
+    if (!detailPanel) return;
+    
+    // Find the first region with newspaper data
+    const agsWithData = Object.keys(zeitungsData).find(ags => 
+      zeitungsData[ags] && zeitungsData[ags].count > 0
+    );
+    
+    if (!agsWithData) {
+      detailPanel.innerHTML = `
+        <div class="detail-title">Region Details</div>
+        <div class="detail-content">
+          Wählen Sie eine Region auf der Karte aus, um die verfügbaren Zeitungen anzuzeigen.
+        </div>
+      `;
+      return;
+    }
+    
+    const regionData = zeitungsData[agsWithData];
+    const regionName = regionData.name;
+    const count = regionData.count;
+    
+    let newspapersList = '';
+    if (regionData.zeitungen && regionData.zeitungen.length > 0) {
+      newspapersList = '<div class="data-grid">';
+      regionData.zeitungen.forEach(zeitung => {
+        newspapersList += `
+          <div class="data-item">
+            <div class="data-label">Zeitung</div>
+            <div class="data-value">${zeitung.name}</div>
+            ${zeitung.website ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">Zur Website</a>` : ''}
+          </div>
+        `;
+      });
+      newspapersList += '</div>';
+    }
+    
+    detailPanel.innerHTML = `
+      <div class="detail-title">${regionName}</div>
+      <div class="detail-content">
+        <div class="detail-summary">
+          Diese Region verfügt über ${count} ${count === 1 ? 'Tageszeitung' : 'Tageszeitungen'}.
+        </div>
+        ${newspapersList}
+      </div>
+    `;
+  }
+
   // --- Data Loading & Execution ---
-  function loadData() {
+  async function loadData() {
     try {
       // Wait for geoData to be defined
       if (typeof window.geoData !== 'undefined') {
         console.log("Using global geoData variable");
-        initializeMap(window.geoData);
+        await initializeMap(window.geoData);
       } else {
         console.log("geoData not available yet, waiting...");
         // Try again in 100ms
