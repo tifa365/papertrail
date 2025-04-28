@@ -37,4 +37,54 @@
     background-color: white;
     line-height: 1.6;
   }
+
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .data-item {
+    border-top: 1px solid #eee;
+    padding-top: 0.5rem;
+  }
+
+  .data-label {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+
+  .data-value {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .newspaper-link {
+    text-decoration: none;
+    color: #8B0000;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.2s ease;
+  }
+
+  .newspaper-link:hover {
+    color: #FF4500;
+  }
+
+  .arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .newspaper-link:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .detail-summary {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
 </style>

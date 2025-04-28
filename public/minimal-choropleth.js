@@ -229,7 +229,7 @@
               className: 'newspaper-popup'
             });
             
-            // Add hover effect
+            // Add hover and click effects
             layer.on({
               mouseover: function(e) {
                 const layer = e.target;
@@ -238,6 +238,9 @@
                   fillOpacity: 0.8
                 });
                 layer.bringToFront();
+                
+                // Update the region detail panel on hover
+                updateRegionDetailPanel(feature);
               },
               mouseout: function(e) {
                 const layer = e.target;
@@ -245,6 +248,10 @@
                   weight: 0.7,
                   fillOpacity: 1
                 });
+              },
+              click: function(e) {
+                // On click, update the region detail panel and open popup
+                updateRegionDetailPanel(feature);
               }
             });
           }
@@ -264,35 +271,41 @@
       map.invalidateSize();
     });
 
-    // Update region details panel with first region that has data
-    updateRegionDetailPanel();
-    
     // Log for debugging
     console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
   }
   
   // --- Update Region Detail Panel ---
-  function updateRegionDetailPanel() {
-    const detailPanel = document.querySelector('.region-detail');
-    if (!detailPanel) return;
+  function updateRegionDetailPanel(feature) {
+    const detailPanel = document.querySelector('#region-detail');
+    const detailTitle = document.querySelector('#detail-title');
+    if (!detailPanel || !detailTitle) return;
     
-    // Find the first region with newspaper data
-    const agsWithData = Object.keys(zeitungsData).find(ags => 
-      zeitungsData[ags] && zeitungsData[ags].count > 0
-    );
-    
-    if (!agsWithData) {
-      detailPanel.innerHTML = `
-        <div class="detail-title">Region Details</div>
-        <div class="detail-content">
-          Wählen Sie eine Region auf der Karte aus, um die verfügbaren Zeitungen anzuzeigen.
-        </div>
-      `;
+    if (!feature || !feature.properties) {
+      detailTitle.textContent = "Fahre mit der Maus auf eine Region, um die Lokalzeitungen an zu zeigen.";
       return;
     }
     
-    const regionData = zeitungsData[agsWithData];
-    const regionName = regionData.name;
+    const ags = feature.properties.ags;
+    const regionName = feature.properties.name || "Unbekannte Region";
+    
+    if (!ags || !zeitungsData[ags] || !zeitungsData[ags].zeitungen) {
+      detailTitle.textContent = `${regionName} - Keine Zeitungsdaten verfügbar`;
+      return;
+    }
+    
+    // Update title with region name
+    detailTitle.textContent = regionName;
+    
+    // Create content section if it doesn't exist
+    let contentSection = detailPanel.querySelector('.detail-content');
+    if (!contentSection) {
+      contentSection = document.createElement('div');
+      contentSection.className = 'detail-content';
+      detailPanel.appendChild(contentSection);
+    }
+    
+    const regionData = zeitungsData[ags];
     const count = regionData.count;
     
     let newspapersList = '';
@@ -303,21 +316,20 @@
           <div class="data-item">
             <div class="data-label">Zeitung</div>
             <div class="data-value">${zeitung.name}</div>
-            ${zeitung.website ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">Zur Website</a>` : ''}
+            ${zeitung.website ? 
+              `<a href="${zeitung.website}" target="_blank" class="newspaper-link">Zur Website <span class="arrow">→</span></a>` : 
+              ''}
           </div>
         `;
       });
       newspapersList += '</div>';
     }
     
-    detailPanel.innerHTML = `
-      <div class="detail-title">${regionName}</div>
-      <div class="detail-content">
-        <div class="detail-summary">
-          Diese Region verfügt über ${count} ${count === 1 ? 'Tageszeitung' : 'Tageszeitungen'}.
-        </div>
-        ${newspapersList}
+    contentSection.innerHTML = `
+      <div class="detail-summary">
+        Diese Region verfügt über ${count} ${count === 1 ? 'Tageszeitung' : 'Tageszeitungen'}.
       </div>
+      ${newspapersList}
     `;
   }
 
