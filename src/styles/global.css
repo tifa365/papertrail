@@ -43,7 +43,7 @@ h1 {
 
 .map-container {
   border: 1px solid #e0e0e0;
-  height: 800px; /* Further increased for larger map */
+  height: 560px; /* 30% smaller than 800px */
   position: relative;
   overflow: visible !important; /* Allow popups to extend beyond the container */
   padding: 10px; /* Reduced padding */
