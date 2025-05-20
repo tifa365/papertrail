@@ -380,6 +380,54 @@
         .newspaper-link:hover {
           background-color: rgba(92, 0, 0, 0.2) !important;
         }
+        
+        /* Mobile-specific: Replace popup with full-screen modal */
+        .mobile-modal-overlay {
+          display: none;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          background: rgba(0, 0, 0, 0.5) !important;
+          z-index: 999999 !important;
+          padding: 20px !important;
+          box-sizing: border-box !important;
+        }
+        
+        .mobile-modal-content {
+          background: white !important;
+          border-radius: 12px !important;
+          padding: 20px !important;
+          max-height: calc(100vh - 40px) !important;
+          overflow-y: auto !important;
+          position: relative !important;
+          margin-top: 40px !important;
+        }
+        
+        .mobile-modal-close {
+          position: absolute !important;
+          top: 15px !important;
+          right: 15px !important;
+          width: 32px !important;
+          height: 32px !important;
+          background: #f5f5f5 !important;
+          border: none !important;
+          border-radius: 50% !important;
+          font-size: 18px !important;
+          cursor: pointer !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        /* On very small screens, hide leaflet popup and use modal instead */
+        .leaflet-popup {
+          display: none !important;
+        }
       }
       
       .newspaper-popup {
@@ -576,25 +624,33 @@
               });
             },
             click: function(e) {
-              // On click, update the region detail panel and open popup
+              // On click, update the region detail panel and show appropriate popup
               updateRegionDetailPanel(feature);
               
-              // Debug logging for popup diagnosis
-              console.log('Region clicked:', feature.properties.name);
-              setTimeout(() => {
-                const popups = document.querySelectorAll('.leaflet-popup');
-                console.log('Popups found after click:', popups.length);
-                popups.forEach((p, i) => {
-                  const styles = getComputedStyle(p);
-                  console.log(`Popup ${i}:`, {
-                    element: p,
-                    zIndex: styles.zIndex,
-                    position: styles.position,
-                    visibility: styles.visibility,
-                    display: styles.display
+              // Check if mobile (screen width < 480px)
+              const isMobile = window.innerWidth < 480;
+              
+              if (isMobile) {
+                // Show mobile modal instead of popup
+                showMobileModal(feature);
+              } else {
+                // Debug logging for popup diagnosis
+                console.log('Region clicked:', feature.properties.name);
+                setTimeout(() => {
+                  const popups = document.querySelectorAll('.leaflet-popup');
+                  console.log('Popups found after click:', popups.length);
+                  popups.forEach((p, i) => {
+                    const styles = getComputedStyle(p);
+                    console.log(`Popup ${i}:`, {
+                      element: p,
+                      zIndex: styles.zIndex,
+                      position: styles.position,
+                      visibility: styles.visibility,
+                      display: styles.display
+                    });
                   });
-                });
-              }, 100);
+                }, 100);
+              }
             }
           });
         }
@@ -626,6 +682,61 @@
 
     // Log for debugging
     console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
+  }
+  
+  // --- Mobile Modal Functions ---
+  function showMobileModal(feature) {
+    // Remove any existing modal
+    hideMobileModal();
+    
+    // Create modal overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'mobile-modal-overlay';
+    overlay.className = 'mobile-modal-overlay';
+    overlay.style.display = 'block';
+    
+    // Create modal content
+    const content = document.createElement('div');
+    content.className = 'mobile-modal-content';
+    
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'mobile-modal-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = hideMobileModal;
+    
+    // Get popup content
+    const popupContent = createPopupContent(feature);
+    
+    // Assemble modal
+    content.innerHTML = popupContent;
+    content.appendChild(closeBtn);
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+    
+    // Close on overlay click
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        hideMobileModal();
+      }
+    });
+    
+    // Close on escape key
+    document.addEventListener('keydown', handleModalEscape);
+  }
+  
+  function hideMobileModal() {
+    const modal = document.getElementById('mobile-modal-overlay');
+    if (modal) {
+      modal.remove();
+    }
+    document.removeEventListener('keydown', handleModalEscape);
+  }
+  
+  function handleModalEscape(e) {
+    if (e.key === 'Escape') {
+      hideMobileModal();
+    }
   }
   
   // --- Update Region Detail Panel ---
