@@ -27,3 +27,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# data archive
+archive/
+clean_zeitungen_data.py
+zeitungen_cleanup_todo.md
