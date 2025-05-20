@@ -248,23 +248,20 @@
         text-decoration: underline;
       }
       
-      /* Fix popup positioning issues - HIGHEST Z-INDEX */
-      .leaflet-popup, .leaflet-popup-pane {
-        position: absolute !important;
+      /* Simple popup z-index fix */
+      .leaflet-popup-pane {
+        z-index: 1001 !important;
+      }
+      
+      .leaflet-popup {
+        position: absolute;
         margin-bottom: 30px;
-        z-index: 999999 !important;
+        z-index: 1001 !important;
       }
       
       .leaflet-popup-content-wrapper {
         border-radius: 8px;
         box-shadow: 0 3px 14px rgba(0,0,0,0.2);
-        z-index: 999999 !important;
-        position: relative !important;
-      }
-      
-      .leaflet-popup-content {
-        z-index: 999999 !important;
-        position: relative !important;
       }
       
       /* Prevent popups from affecting layout */
@@ -273,15 +270,14 @@
       }
       
       /* Ensure popup tips are visible */
-      .leaflet-popup-tip-container, .leaflet-popup-tip {
-        z-index: 999999 !important;
+      .leaflet-popup-tip-container {
+        z-index: 1001 !important;
         pointer-events: none;
       }
       
       /* Larger close button on mobile */
       .leaflet-popup-close-button {
-        z-index: 1000000 !important;
-        position: relative !important;
+        z-index: 1002 !important;
       }
       
       @media (max-width: 768px) {
@@ -486,26 +482,6 @@
           
           layer.bindPopup(popupContent, popupOptions);
           
-          // Force popup z-index when opened
-          layer.on('popupopen', function(e) {
-            setTimeout(function() {
-              const popup = e.popup.getElement();
-              if (popup) {
-                popup.style.zIndex = '999999';
-                popup.style.position = 'relative';
-                const wrapper = popup.querySelector('.leaflet-popup-content-wrapper');
-                if (wrapper) {
-                  wrapper.style.zIndex = '999999';
-                  wrapper.style.position = 'relative';
-                }
-                const closeBtn = popup.querySelector('.leaflet-popup-close-button');
-                if (closeBtn) {
-                  closeBtn.style.zIndex = '1000000';
-                  closeBtn.style.position = 'relative';
-                }
-              }
-            }, 10);
-          });
           
           // Add hover and click effects
           layer.on({
@@ -548,30 +524,6 @@
       map.invalidateSize();
     });
     
-    // Global popup z-index fix
-    map.on('popupopen', function(e) {
-      setTimeout(function() {
-        const popup = e.popup.getElement();
-        if (popup) {
-          popup.style.zIndex = '999999';
-          popup.style.position = 'relative';
-          const wrapper = popup.querySelector('.leaflet-popup-content-wrapper');
-          if (wrapper) {
-            wrapper.style.zIndex = '999999';
-            wrapper.style.position = 'relative';
-          }
-          const closeBtn = popup.querySelector('.leaflet-popup-close-button');
-          if (closeBtn) {
-            closeBtn.style.zIndex = '1000000';
-            closeBtn.style.position = 'relative';
-          }
-          const tip = popup.querySelector('.leaflet-popup-tip-container');
-          if (tip) {
-            tip.style.zIndex = '999999';
-          }
-        }
-      }, 10);
-    });
 
     // Log for debugging
     console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
