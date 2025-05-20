@@ -248,36 +248,47 @@
         text-decoration: underline;
       }
       
-      /* Simple popup z-index fix */
+      /* High priority popup z-index */
       .leaflet-popup-pane {
-        z-index: 1001 !important;
+        z-index: 9999 !important;
       }
       
       .leaflet-popup {
         position: absolute;
         margin-bottom: 30px;
-        z-index: 1001 !important;
+        z-index: 9999 !important;
       }
       
       .leaflet-popup-content-wrapper {
         border-radius: 8px;
         box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        z-index: 9999 !important;
+      }
+      
+      .leaflet-popup-content {
+        z-index: 9999 !important;
       }
       
       /* Prevent popups from affecting layout */
       .leaflet-container {
         overflow: visible !important;
+        touch-action: none !important;
+      }
+      
+      /* Fix mobile touch scrolling issues */
+      .germany-map {
+        touch-action: none !important;
       }
       
       /* Ensure popup tips are visible */
       .leaflet-popup-tip-container {
-        z-index: 1001 !important;
+        z-index: 9999 !important;
         pointer-events: none;
       }
       
       /* Larger close button on mobile */
       .leaflet-popup-close-button {
-        z-index: 1002 !important;
+        z-index: 10000 !important;
       }
       
       @media (max-width: 768px) {
@@ -491,7 +502,6 @@
                 weight: 1.5,
                 fillOpacity: 0.8
               });
-              layer.bringToFront();
               
               // Update the region detail panel on hover
               updateRegionDetailPanel(feature);
@@ -521,7 +531,17 @@
     
     // Fix potential size issues by automatically updating the map on window resize
     window.addEventListener('resize', function() {
-      map.invalidateSize();
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    });
+    
+    // Prevent map from repositioning on hover events
+    map.on('movestart', function(e) {
+      if (e.target._zooming || e.target._panAnim) {
+        return;
+      }
+      e.preventDefault();
     });
     
 
