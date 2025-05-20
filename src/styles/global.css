@@ -16,7 +16,9 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -45,8 +47,9 @@ h1 {
 .map-container {
   border: 1px solid #e0e0e0;
   margin-bottom: 2.5rem;
-  height: 100vh;
-  min-height: 600px;
+  height: 70vh; /* Reduced from 100vh to 70vh */
+  min-height: 500px; /* Reduced from 600px */
+  max-height: 700px; /* Added max height */
   position: relative;
   overflow: visible; /* Changed from hidden to allow popups to extend beyond the container */
   padding-top: 30px; /* Add padding at the top to prevent popups from being cut off */
@@ -56,7 +59,7 @@ h1 {
 .germany-map {
   width: 100%;
   height: 100%;
-  min-height: 600px;
+  min-height: 500px; /* Reduced from 600px to match container */
 }
 
 .search-container {
@@ -96,10 +99,13 @@ h1 {
 
 .columns {
   display: flex;
+  margin-top: auto; /* Push to bottom of flex container */
+  padding-top: 1rem;
+  padding-bottom: 2rem;
 }
 
 .column {
-  width: 50%;
+  width: 100%; /* Change from 50% to 100% for full width */
 }
 
 .column-left {
