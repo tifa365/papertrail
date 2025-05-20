@@ -331,11 +331,54 @@
         }
         
         .leaflet-popup-content-wrapper {
-          max-width: 280px !important;
+          max-width: 320px !important;
         }
         
         .region-popup {
-          max-width: 260px !important;
+          max-width: 300px !important;
+          padding: 12px !important;
+        }
+        
+        .region-popup h3 {
+          font-size: 18px !important;
+          margin-bottom: 10px !important;
+          padding-bottom: 6px !important;
+        }
+        
+        .count-badge {
+          font-size: 14px !important;
+          padding: 6px 10px !important;
+          margin-bottom: 12px !important;
+        }
+        
+        .newspaper-name {
+          font-size: 16px !important;
+          line-height: 1.4 !important;
+          margin-bottom: 4px !important;
+        }
+        
+        .newspaper-details {
+          font-size: 14px !important;
+          line-height: 1.4 !important;
+          margin-top: 4px !important;
+        }
+        
+        .newspaper-item {
+          margin-bottom: 14px !important;
+          padding-bottom: 10px !important;
+        }
+        
+        .newspaper-link {
+          font-size: 14px !important;
+          margin-top: 6px !important;
+          padding: 4px 8px !important;
+          background-color: rgba(92, 0, 0, 0.1) !important;
+          border-radius: 4px !important;
+          display: inline-block !important;
+        }
+        
+        .newspaper-link:hover {
+          background-color: rgba(92, 0, 0, 0.2) !important;
         }
       }
       
