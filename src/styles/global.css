@@ -228,3 +228,40 @@ h1 {
 .trend-neutral {
   color: #666;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .papertrail-container {
+    padding: 0.5rem;
+  }
+  
+  .map-container {
+    height: 400px !important;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .header {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .papertrail-container {
+    padding: 0.25rem;
+  }
+  
+  .map-container {
+    height: 300px !important;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 0.7rem;
+  }
+}
