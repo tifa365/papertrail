@@ -248,17 +248,23 @@
         text-decoration: underline;
       }
       
-      /* Fix popup positioning issues */
-      .leaflet-popup {
-        position: absolute;
+      /* Fix popup positioning issues - HIGHEST Z-INDEX */
+      .leaflet-popup, .leaflet-popup-pane {
+        position: absolute !important;
         margin-bottom: 30px;
-        z-index: 99999 !important;
+        z-index: 999999 !important;
       }
       
       .leaflet-popup-content-wrapper {
         border-radius: 8px;
         box-shadow: 0 3px 14px rgba(0,0,0,0.2);
-        z-index: 99999 !important;
+        z-index: 999999 !important;
+        position: relative !important;
+      }
+      
+      .leaflet-popup-content {
+        z-index: 999999 !important;
+        position: relative !important;
       }
       
       /* Prevent popups from affecting layout */
@@ -267,14 +273,15 @@
       }
       
       /* Ensure popup tips are visible */
-      .leaflet-popup-tip-container {
-        z-index: 99999 !important;
+      .leaflet-popup-tip-container, .leaflet-popup-tip {
+        z-index: 999999 !important;
         pointer-events: none;
       }
       
       /* Larger close button on mobile */
       .leaflet-popup-close-button {
-        z-index: 100000 !important;
+        z-index: 1000000 !important;
+        position: relative !important;
       }
       
       @media (max-width: 768px) {
