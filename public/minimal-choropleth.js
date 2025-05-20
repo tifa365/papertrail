@@ -286,29 +286,48 @@
         pointer-events: none;
       }
       
-      /* Larger close button on mobile */
+      /* Professional close button styling */
       .leaflet-popup-close-button {
         z-index: 10000 !important;
+        width: 24px !important;
+        height: 24px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        line-height: 22px !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        color: #666 !important;
+        right: -8px !important;
+        top: -8px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+      }
+      
+      .leaflet-popup-close-button:hover {
+        background-color: #f8f8f8 !important;
+        border-color: #ccc !important;
+        color: #333 !important;
+        transform: scale(1.05) !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
+      }
+      
+      .leaflet-popup-close-button:active {
+        transform: scale(0.95) !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;
       }
       
       @media (max-width: 768px) {
         .leaflet-popup-close-button {
-          width: 30px !important;
-          height: 30px !important;
-          font-size: 20px !important;
-          line-height: 28px !important;
-          text-align: center !important;
-          background-color: #fff !important;
-          border: 2px solid #ccc !important;
-          border-radius: 50% !important;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+          width: 28px !important;
+          height: 28px !important;
+          font-size: 16px !important;
+          line-height: 26px !important;
           right: -10px !important;
           top: -10px !important;
-        }
-        
-        .leaflet-popup-close-button:hover {
-          background-color: #f5f5f5 !important;
-          border-color: #999 !important;
         }
         
         .leaflet-popup-content-wrapper {
