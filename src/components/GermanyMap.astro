@@ -2,9 +2,39 @@
 
 ---
 
+<div class="mobile-legend-container">
+  <div class="map-legend">
+    <div class="legend-title">Legende</div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #5C0000;"></div>
+      <span>5+ Zeitungen</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #8B0000;"></div>
+      <span>4 Zeitungen</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #B22222;"></div>
+      <span>3 Zeitungen</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #FF8A8A;"></div>
+      <span>2 Zeitungen</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #FFC7C7;"></div>
+      <span>1 Zeitung</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box" style="background-color: #EFEFEF;"></div>
+      <span>0 Zeitungen</span>
+    </div>
+  </div>
+</div>
+
 <div class="map-container">
   <div class="map-with-legend">
-    <div class="map-legend">
+    <div class="map-legend desktop-legend">
       <div class="legend-title">Legende</div>
       <div class="legend-item">
         <div class="color-box" style="background-color: #5C0000;"></div>
@@ -80,6 +110,11 @@
     height: 100%;
   }
 
+  /* Mobile legend container - hidden on desktop */
+  .mobile-legend-container {
+    display: none;
+  }
+
   /* Legend styling */
   .map-legend {
     position: absolute;
@@ -124,27 +159,51 @@
       max-height: 400px !important;
     }
     
-    .map-legend {
-      top: 10px;
-      left: 10px;
+    /* Show mobile legend, hide desktop legend */
+    .mobile-legend-container {
+      display: block !important;
+      margin-bottom: 10px;
+    }
+    
+    .desktop-legend {
+      display: none !important;
+    }
+    
+    /* Mobile legend styling */
+    .mobile-legend-container .map-legend {
+      position: relative !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin-bottom: 0;
       padding: 8px;
-      max-width: 140px;
       font-size: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
     }
     
-    .legend-title {
+    .mobile-legend-container .legend-title {
       font-size: 0.8rem;
-      margin-bottom: 6px;
+      margin-bottom: 0;
+      margin-right: 8px;
+      flex-shrink: 0;
     }
     
-    .map-legend .legend-item {
-      margin-bottom: 4px;
+    .mobile-legend-container .legend-item {
+      margin-bottom: 0;
+      margin-right: 6px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
     }
     
-    .map-legend .color-box {
+    .mobile-legend-container .color-box {
       width: 12px;
       height: 12px;
-      margin-right: 6px;
+      margin-right: 4px;
     }
   }
 
