@@ -29,12 +29,44 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
     <RegionDetail />
 
     <!-- Map Container -->
-    <GermanyMap />
-
-    <!-- Bottom section - Top Regions -->
-    <div class="columns">
-      <!-- Top Regions (full width) -->
-      <TopRegions />
+    <div class="main-content">
+      <div class="left-column">
+        <GermanyMap />
+      </div>
+      <div class="right-column">
+        <TopRegions />
+      </div>
     </div>
   </div>
 </MainLayout>
+
+<style>
+  .main-content {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .left-column {
+    flex: 3; /* Takes 3/4 of the available space */
+  }
+  
+  .right-column {
+    flex: 1; /* Takes 1/4 of the available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .main-content {
+      flex-direction: column;
+    }
+    
+    .left-column, .right-column {
+      flex: 1;
+      width: 100%;
+    }
+  }
+</style>
