@@ -252,12 +252,13 @@
       .leaflet-popup {
         position: absolute;
         margin-bottom: 30px;
-        z-index: 9999 !important;
+        z-index: 99999 !important;
       }
       
       .leaflet-popup-content-wrapper {
         border-radius: 8px;
         box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        z-index: 99999 !important;
       }
       
       /* Prevent popups from affecting layout */
@@ -267,8 +268,42 @@
       
       /* Ensure popup tips are visible */
       .leaflet-popup-tip-container {
-        z-index: 9999 !important;
+        z-index: 99999 !important;
         pointer-events: none;
+      }
+      
+      /* Larger close button on mobile */
+      .leaflet-popup-close-button {
+        z-index: 100000 !important;
+      }
+      
+      @media (max-width: 768px) {
+        .leaflet-popup-close-button {
+          width: 30px !important;
+          height: 30px !important;
+          font-size: 20px !important;
+          line-height: 28px !important;
+          text-align: center !important;
+          background-color: #fff !important;
+          border: 2px solid #ccc !important;
+          border-radius: 50% !important;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+          right: -10px !important;
+          top: -10px !important;
+        }
+        
+        .leaflet-popup-close-button:hover {
+          background-color: #f5f5f5 !important;
+          border-color: #999 !important;
+        }
+        
+        .leaflet-popup-content-wrapper {
+          max-width: 280px !important;
+        }
+        
+        .region-popup {
+          max-width: 260px !important;
+        }
       }
       
       .newspaper-popup {
