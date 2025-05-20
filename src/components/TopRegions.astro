@@ -10,22 +10,22 @@
     <div class="region-item">
       <span class="region-number">1.</span>
       <span class="region-name">München</span>
-      <span class="region-value">(5+)</span>
+      <span class="region-value">5+</span>
     </div>
     <div class="region-item">
       <span class="region-number">2.</span>
       <span class="region-name">Berlin</span>
-      <span class="region-value">(5+)</span>
+      <span class="region-value">5+</span>
     </div>
     <div class="region-item">
       <span class="region-number">3.</span>
       <span class="region-name">Hamburg</span>
-      <span class="region-value">(4)</span>
+      <span class="region-value">4</span>
     </div>
     <div class="region-item">
       <span class="region-number">4.</span>
       <span class="region-name">Dresden</span>
-      <span class="region-value">(3)</span>
+      <span class="region-value">3</span>
     </div>
   </div>
 </div>
@@ -36,7 +36,7 @@
     padding: 1rem;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
-    max-width: 500px;
+    max-width: 350px;
     margin: 0 auto;
   }
   
@@ -46,5 +46,23 @@
   
   .region-item {
     margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .region-number {
+    min-width: 20px;
+  }
+  
+  .region-name {
+    flex: 1;
+  }
+  
+  .region-value {
+    font-weight: bold;
+    color: #5C0000;
+    font-size: 1.1rem;
   }
 </style>
