@@ -486,6 +486,27 @@
           
           layer.bindPopup(popupContent, popupOptions);
           
+          // Force popup z-index when opened
+          layer.on('popupopen', function(e) {
+            setTimeout(function() {
+              const popup = e.popup.getElement();
+              if (popup) {
+                popup.style.zIndex = '999999';
+                popup.style.position = 'relative';
+                const wrapper = popup.querySelector('.leaflet-popup-content-wrapper');
+                if (wrapper) {
+                  wrapper.style.zIndex = '999999';
+                  wrapper.style.position = 'relative';
+                }
+                const closeBtn = popup.querySelector('.leaflet-popup-close-button');
+                if (closeBtn) {
+                  closeBtn.style.zIndex = '1000000';
+                  closeBtn.style.position = 'relative';
+                }
+              }
+            }, 10);
+          });
+          
           // Add hover and click effects
           layer.on({
             mouseover: function(e) {
@@ -525,6 +546,31 @@
     // Fix potential size issues by automatically updating the map on window resize
     window.addEventListener('resize', function() {
       map.invalidateSize();
+    });
+    
+    // Global popup z-index fix
+    map.on('popupopen', function(e) {
+      setTimeout(function() {
+        const popup = e.popup.getElement();
+        if (popup) {
+          popup.style.zIndex = '999999';
+          popup.style.position = 'relative';
+          const wrapper = popup.querySelector('.leaflet-popup-content-wrapper');
+          if (wrapper) {
+            wrapper.style.zIndex = '999999';
+            wrapper.style.position = 'relative';
+          }
+          const closeBtn = popup.querySelector('.leaflet-popup-close-button');
+          if (closeBtn) {
+            closeBtn.style.zIndex = '1000000';
+            closeBtn.style.position = 'relative';
+          }
+          const tip = popup.querySelector('.leaflet-popup-tip-container');
+          if (tip) {
+            tip.style.zIndex = '999999';
+          }
+        }
+      }, 10);
     });
 
     // Log for debugging
