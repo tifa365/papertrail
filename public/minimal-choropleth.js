@@ -516,6 +516,23 @@
             click: function(e) {
               // On click, update the region detail panel and open popup
               updateRegionDetailPanel(feature);
+              
+              // Debug logging for popup diagnosis
+              console.log('Region clicked:', feature.properties.name);
+              setTimeout(() => {
+                const popups = document.querySelectorAll('.leaflet-popup');
+                console.log('Popups found after click:', popups.length);
+                popups.forEach((p, i) => {
+                  const styles = getComputedStyle(p);
+                  console.log(`Popup ${i}:`, {
+                    element: p,
+                    zIndex: styles.zIndex,
+                    position: styles.position,
+                    visibility: styles.visibility,
+                    display: styles.display
+                  });
+                });
+              }, 100);
             }
           });
         }

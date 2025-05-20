@@ -45,7 +45,7 @@ h1 {
   border: 1px solid #e0e0e0;
   height: 800px; /* Further increased for larger map */
   position: relative;
-  overflow: visible; /* Allow popups to extend beyond the container */
+  overflow: visible !important; /* Allow popups to extend beyond the container */
   padding: 10px; /* Reduced padding */
 }
 
