@@ -5,6 +5,37 @@
 <div class="map-container">
   <div class="map-with-legend">
     <div id="map" class="germany-map"></div>
+    
+    <!-- Desktop Legend Overlay -->
+    <div class="legend-overlay">
+      <div class="map-legend">
+        <div class="legend-title">Legende</div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #5C0000;"></div>
+          <span>5+ Zeitungen</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #8B0000;"></div>
+          <span>4 Zeitungen</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #B22222;"></div>
+          <span>3 Zeitungen</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #FF8A8A;"></div>
+          <span>2 Zeitungen</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #FFC7C7;"></div>
+          <span>1 Zeitung</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box" style="background-color: #EFEFEF;"></div>
+          <span>0 Zeitungen</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -83,10 +114,19 @@
     height: 100%;
   }
 
-  /* Legend below map styling */
+  /* Desktop legend overlay (positioned over map) */
+  .legend-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: block;
+  }
+
+  /* Mobile legend below map (hidden on desktop) */
   .legend-below-map {
     margin-top: 10px;
-    display: flex;
+    display: none;
     justify-content: center;
   }
 
@@ -130,6 +170,16 @@
     .map-container {
       height: 400px !important;
       max-height: 400px !important;
+    }
+    
+    /* Hide desktop legend overlay on mobile */
+    .legend-overlay {
+      display: none !important;
+    }
+    
+    /* Show mobile legend below map */
+    .legend-below-map {
+      display: flex !important;
     }
     
     /* Mobile legend styling - horizontal layout */
