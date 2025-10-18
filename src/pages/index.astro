@@ -16,12 +16,19 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
   </style>
 
   <div class="papertrail-container">
-    <!-- Header - NYT Data Viz Style -->
-    <div class="header">
-      <div class="header-left">
-        <h1>Papertrail</h1>
-        <div class="subtitle">LOKALE TAGESZEITUNGEN IN DEINEM LANDKREIS</div>
-        <div class="divider"></div>
+    <!-- Header - Collapsible -->
+    <div class="header-wrapper" id="headerWrapper">
+      <div class="header">
+        <div class="header-left">
+          <h1>Papertrail</h1>
+          <div class="subtitle">LOKALE TAGESZEITUNGEN IN DEINEM LANDKREIS</div>
+          <div class="divider-container">
+            <div class="divider"></div>
+            <button class="collapse-arrow" id="collapseBtn" title="Header schließen">
+              ▲
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -32,7 +39,7 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
     <div class="map-section">
       <GermanyMap />
     </div>
-    
+
     <!-- Top Regions Section -->
     <div class="top-regions-section">
       <TopRegions />
@@ -40,24 +47,94 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
   </div>
 </MainLayout>
 
+<script>
+  const headerWrapper = document.getElementById('headerWrapper');
+  const collapseBtn = document.getElementById('collapseBtn');
+
+  collapseBtn?.addEventListener('click', () => {
+    headerWrapper?.classList.toggle('collapsed');
+  });
+</script>
+
 <style>
+  /* Collapsible Header */
+  .header-wrapper {
+    overflow: hidden;
+    transition: max-height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                margin-bottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.6s ease;
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  .header-wrapper.collapsed {
+    max-height: 0;
+    margin-bottom: 0;
+    opacity: 0;
+  }
+
+  .divider-container {
+    position: relative;
+    width: 100%;
+    height: 1px;
+  }
+
+  /* Smaller, more subtle arrow button */
+  .collapse-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 11px;
+    color: #999;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .collapse-arrow:hover {
+    background: #f9f9f9;
+    border-color: #800000;
+    color: #800000;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .collapse-arrow:active {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+
   .map-section {
-    margin-bottom: 1rem; /* Reduced bottom margin */
+    margin-bottom: 1rem;
   }
-  
+
   .top-regions-section {
-    margin-bottom: 0; /* No bottom margin */
+    margin-bottom: 0;
   }
-  
+
   @media (max-width: 768px) {
     .map-section, .top-regions-section {
       width: 100%;
     }
+
+    /* Slightly smaller on mobile */
+    .collapse-arrow {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+    }
   }
-  
+
   /* Desktop only: Try to constrain page overflow without affecting map popups */
   @media (min-width: 769px) {
-    /* Keep map section with visible overflow for popups */
     .map-section {
       overflow: visible !important;
       position: relative;
