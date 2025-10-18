@@ -81,17 +81,18 @@
 <style>
   html,
   body {
-    height: 100%;
     margin: 0;
   }
 
   #map {
     width: 100%;
-    height: 560px !important;
-    max-height: 560px !important;
-    overflow: visible !important;
+    height: 560px;
+    max-height: 560px;
+    min-height: 560px;
     background-color: white;
-    padding: 20px 0; /* Add vertical padding to give space for popups */
+    padding: 0;
+    margin: 0;
+    position: relative;
   }
 
   /* Hide zoom controls */
@@ -101,10 +102,13 @@
 
   /* Remove border */
   .map-container {
-    border: none !important;
-    height: 560px !important;
-    max-height: 560px !important;
-    overflow: visible !important;
+    border: none;
+    height: 560px;
+    max-height: 560px;
+    min-height: 560px;
+    padding: 0;
+    margin: 0;
+    position: relative;
   }
 
   /* Map with legend layout */
@@ -227,5 +231,30 @@
     }
   }
   
-  /* Popups need full overflow to be visible */
+  /* Prevent Leaflet panes from creating phantom scroll height */
+  .map-container, #map, .leaflet-container {
+    overflow: hidden;
+    position: relative;
+    display: block;
+    contain: layout paint; /* Isolate map's layout/paint from the page */
+  }
+
+  /* Clip Leaflet's internal panes so transforms don't affect layout */
+  #map .leaflet-pane,
+  #map .leaflet-map-pane,
+  #map .leaflet-tile-pane,
+  #map .leaflet-overlay-pane,
+  #map .leaflet-popup-pane,
+  #map .leaflet-marker-pane,
+  #map .leaflet-shadow-pane {
+    overflow: hidden;
+    contain: layout paint; /* Extra belt-and-suspenders */
+  }
+
+  /* Prevent img/canvas baseline whitespace changes after fonts/images load */
+  .leaflet-container img,
+  .leaflet-container canvas,
+  .leaflet-container svg {
+    display: block;
+  }
 </style>

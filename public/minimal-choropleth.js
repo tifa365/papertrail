@@ -634,22 +634,8 @@
                 // Show mobile modal instead of popup
                 showMobileModal(feature);
               } else {
-                // Debug logging for popup diagnosis
-                console.log('Region clicked:', feature.properties.name);
-                setTimeout(() => {
-                  const popups = document.querySelectorAll('.leaflet-popup');
-                  console.log('Popups found after click:', popups.length);
-                  popups.forEach((p, i) => {
-                    const styles = getComputedStyle(p);
-                    console.log(`Popup ${i}:`, {
-                      element: p,
-                      zIndex: styles.zIndex,
-                      position: styles.position,
-                      visibility: styles.visibility,
-                      display: styles.display
-                    });
-                  });
-                }, 100);
+                // Use normal Leaflet popup for now
+                // The popup was already bound above
               }
             }
           });
@@ -657,33 +643,32 @@
       }
     }).addTo(map);
     
-    // Use a fixed center and zoom for more control over the map size
-    map.fitBounds(INITIAL_VIEW.bounds, {
-      padding: [5, 5],
-      maxZoom: 8.0,
+    // Use fixed view instead of fitBounds to prevent layout changes
+    map.setView([51.1657, 10.4515], 6, {
       animate: false
     });
-    
-    // Fix potential size issues by automatically updating the map on window resize
-    window.addEventListener('resize', function() {
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 100);
+
+    // Properly invalidate size after map is ready
+    map.whenReady(() => {
+      map.invalidateSize(false);
     });
-    
-    // Prevent map from repositioning on hover events
-    map.on('movestart', function(e) {
-      if (e.target._zooming || e.target._panAnim) {
-        return;
-      }
-      e.preventDefault();
+
+    // Also invalidate after moveend (after initial setView completes)
+    map.once('moveend', () => {
+      map.invalidateSize(false);
     });
-    
+
+    // Final invalidation after page fully loads (fonts, images settled)
+    window.addEventListener('load', () => {
+      map.invalidateSize(false);
+    });
 
     // Log for debugging
     console.log(`Using integer zoom level: ${map.getZoom()} to avoid Leaflet zoom bugs`);
   }
   
+  // Portal popup functions removed - reverting to standard Leaflet popups
+
   // --- Mobile Modal Functions ---
   function showMobileModal(feature) {
     // Remove any existing modal

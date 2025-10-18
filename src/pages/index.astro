@@ -46,12 +46,22 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
   }
   
   .top-regions-section {
-    margin-bottom: 1rem; /* Reduced bottom margin */
+    margin-bottom: 0; /* No bottom margin */
   }
   
   @media (max-width: 768px) {
     .map-section, .top-regions-section {
       width: 100%;
+    }
+  }
+  
+  /* Desktop only: Try to constrain page overflow without affecting map popups */
+  @media (min-width: 769px) {
+    /* Keep map section with visible overflow for popups */
+    .map-section {
+      overflow: visible !important;
+      position: relative;
+      z-index: 100;
     }
   }
 </style>
