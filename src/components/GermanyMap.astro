@@ -231,24 +231,23 @@
     }
   }
   
-  /* Prevent Leaflet panes from creating phantom scroll height */
+  /* Allow popups to overflow - critical for visibility! */
   .map-container, #map, .leaflet-container {
-    overflow: hidden;
+    /* overflow: hidden; */ /* REMOVED - clips popups! */
     position: relative;
     display: block;
-    contain: layout paint; /* Isolate map's layout/paint from the page */
+    /* contain: layout paint; */ /* REMOVED - also clips overflow */
   }
 
-  /* Clip Leaflet's internal panes so transforms don't affect layout */
+  /* Don't clip Leaflet's internal panes - popups need to overflow */
   #map .leaflet-pane,
   #map .leaflet-map-pane,
   #map .leaflet-tile-pane,
   #map .leaflet-overlay-pane,
-  #map .leaflet-popup-pane,
   #map .leaflet-marker-pane,
   #map .leaflet-shadow-pane {
-    overflow: hidden;
-    contain: layout paint; /* Extra belt-and-suspenders */
+    /* overflow: hidden; */ /* REMOVED - clips popups! */
+    /* contain: layout paint; */ /* REMOVED - clips overflow */
   }
 
   /* Prevent img/canvas baseline whitespace changes after fonts/images load */

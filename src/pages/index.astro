@@ -36,9 +36,7 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
     <RegionDetail />
 
     <!-- Map Container -->
-    <div class="map-section">
-      <GermanyMap />
-    </div>
+    <GermanyMap />
 
     <!-- Top Regions Section -->
     <div class="top-regions-section">
@@ -69,8 +67,13 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
 
   .header-wrapper.collapsed {
     max-height: 0;
-    margin-bottom: 0;
+    margin-bottom: -1rem;
     opacity: 0;
+  }
+
+  /* Reduce container top padding when header is collapsed */
+  .papertrail-container:has(.header-wrapper.collapsed) {
+    padding-top: 0.5rem;
   }
 
   .divider-container {
@@ -112,12 +115,8 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
     transform: translate(-50%, -50%) scale(0.95);
   }
 
-  .map-section {
-    margin-bottom: 1rem;
-  }
-
   .top-regions-section {
-    margin-bottom: 0;
+    margin-bottom: 1rem;
   }
 
   @media (max-width: 768px) {
@@ -130,15 +129,6 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
       width: 24px;
       height: 24px;
       font-size: 10px;
-    }
-  }
-
-  /* Desktop only: Try to constrain page overflow without affecting map popups */
-  @media (min-width: 769px) {
-    .map-section {
-      overflow: visible !important;
-      position: relative;
-      z-index: 100;
     }
   }
 </style>

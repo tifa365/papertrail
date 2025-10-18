@@ -651,6 +651,7 @@
     // Properly invalidate size after map is ready
     map.whenReady(() => {
       map.invalidateSize(false);
+      window.dispatchEvent(new Event('resize')); // mimics the devtools "fix"
     });
 
     // Also invalidate after moveend (after initial setView completes)

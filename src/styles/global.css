@@ -50,7 +50,7 @@ h1 {
   border: 1px solid #e0e0e0;
   height: 560px;
   position: relative;
-  overflow: hidden; /* Prevent Leaflet panes from extending beyond container */
+  /* overflow: hidden; */ /* REMOVED - clips popups! Popups need overflow: visible */
   padding: 0; /* No padding avoids 100% height math issues */
 }
 
@@ -275,3 +275,4 @@ h1 {
     font-size: 0.7rem;
   }
 }
+
