@@ -637,21 +637,27 @@
             mouseover: function(e) {
               const layer = e.target;
               layer.setStyle({
-                weight: 1.5,
                 fillOpacity: 0.8
               });
-              
+
               // Update the region detail panel on hover
               updateRegionDetailPanel(feature);
             },
             mouseout: function(e) {
               const layer = e.target;
               layer.setStyle({
-                weight: 0.7,
                 fillOpacity: 1
               });
             },
+            mousedown: function(e) {
+              // Prevent focus outline BEFORE it appears
+              e.originalEvent.preventDefault();
+              if (e.target._path) {
+                e.target._path.blur();
+              }
+            },
             click: function(e) {
+
               // On click, update the region detail panel and show appropriate popup
               updateRegionDetailPanel(feature);
               
@@ -691,6 +697,13 @@
           if (title) {
             path.setAttribute('aria-label', title); // Preserve accessibility
           }
+        });
+
+        // Remove focus outline: Make all SVG paths non-focusable
+        const allPaths = document.querySelectorAll('.regionsPane-pane svg path');
+        allPaths.forEach(path => {
+          path.setAttribute('focusable', 'false');
+          path.style.outline = 'none';
         });
       }, 100);
     });

@@ -318,3 +318,50 @@ h1 {
   pointer-events: auto !important;
 }
 
+/* Remove focus outline on SVG paths when clicked */
+.leaflet-pane.regionsPane-pane svg path {
+  outline: none !important;
+}
+
+.leaflet-pane.regionsPane-pane svg path:focus {
+  outline: none !important;
+}
+
+/* Remove outline from Leaflet interactive paths */
+.leaflet-interactive {
+  outline: none !important;
+}
+
+.leaflet-interactive:focus {
+  outline: none !important;
+}
+
+/* Remove any SVG-specific outlines */
+svg path.leaflet-interactive {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+}
+
+/* Disable all browser focus/selection visual effects on map paths */
+.leaflet-pane svg path,
+.leaflet-interactive,
+svg.leaflet-zoom-animated path {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+}
+
+/* Firefox-specific outline removal */
+.leaflet-pane svg path::-moz-focus-inner,
+.leaflet-interactive::-moz-focus-inner {
+  border: 0 !important;
+  outline: none !important;
+}
+
+/* Remove any selection highlighting */
+.leaflet-pane svg path::selection,
+.leaflet-interactive::selection {
+  background: transparent !important;
+}
+
