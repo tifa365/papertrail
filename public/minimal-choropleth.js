@@ -117,17 +117,21 @@
         if (berlinData.zeitungen && berlinData.zeitungen.length > 0) {
           newspapersList = '<div class="newspaper-list">';
           berlinData.zeitungen.forEach(zeitung => {
-            const website = zeitung.website 
-              ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>` 
+            // Filter out empty strings
+            const website = zeitung.website?.trim()
+              ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>`
               : '';
-            
+            const verlag = zeitung.verlag?.trim() || '';
+            const ort = zeitung.erscheinungsort?.trim() ? `(${zeitung.erscheinungsort})` : '';
+
+            // Only show details line if there's actual content
+            const details = [verlag, ort, website].filter(x => x).join(' ');
+            const detailsHtml = details ? `<div class="newspaper-details">${details}</div>` : '';
+
             newspapersList += `
               <div class="newspaper-item">
                 <div class="newspaper-name">${zeitung.name}</div>
-                <div class="newspaper-details">
-                  ${zeitung.verlag || ''} ${zeitung.erscheinungsort ? `(${zeitung.erscheinungsort})` : ''}
-                  ${website}
-                </div>
+                ${detailsHtml}
               </div>
             `;
           });
@@ -161,17 +165,21 @@
     if (regionData.zeitungen && regionData.zeitungen.length > 0) {
       newspapersList = '<div class="newspaper-list">';
       regionData.zeitungen.forEach(zeitung => {
-        const website = zeitung.website 
-          ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>` 
+        // Filter out empty strings
+        const website = zeitung.website?.trim()
+          ? `<a href="${zeitung.website}" target="_blank" class="newspaper-link">🔗 Website</a>`
           : '';
-        
+        const verlag = zeitung.verlag?.trim() || '';
+        const ort = zeitung.erscheinungsort?.trim() ? `(${zeitung.erscheinungsort})` : '';
+
+        // Only show details line if there's actual content
+        const details = [verlag, ort, website].filter(x => x).join(' ');
+        const detailsHtml = details ? `<div class="newspaper-details">${details}</div>` : '';
+
         newspapersList += `
           <div class="newspaper-item">
             <div class="newspaper-name">${zeitung.name}</div>
-            <div class="newspaper-details">
-              ${zeitung.verlag || ''} ${zeitung.erscheinungsort ? `(${zeitung.erscheinungsort})` : ''}
-              ${website}
-            </div>
+            ${detailsHtml}
           </div>
         `;
       });
