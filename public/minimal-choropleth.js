@@ -490,6 +490,28 @@
       attributionControl: false,
       zoomControl: false
     });
+
+    // ===================================================================
+    // CUSTOM PANE SYSTEM - Explicit z-index hierarchy
+    // This ensures tooltips/popups always appear above SVG polygons
+    // (SVG ignores z-index and renders by DOM order, so we separate
+    // them into different panes with explicit z-index values)
+    // ===================================================================
+
+    // LOW z pane for polygon regions (below everything)
+    const regionsPane = map.createPane('regionsPane');
+    regionsPane.style.zIndex = '200';        // Below tooltips/popups
+    regionsPane.style.pointerEvents = 'auto';
+
+    // HIGH z pane for hover tooltips (above polygons)
+    const frontTooltipPane = map.createPane('frontTooltip');
+    frontTooltipPane.style.zIndex = '10000'; // Above all map content
+    frontTooltipPane.style.pointerEvents = 'none'; // Don't block map interactions
+
+    // HIGHEST z pane for click popups (above tooltips)
+    const popupTopPane = map.createPane('popupTop');
+    popupTopPane.style.zIndex = '10001';     // Above tooltips
+    popupTopPane.style.pointerEvents = 'auto';
     
     // ULTRA AGGRESSIVE Berlin handling - completely remove ALL Berlin districts
     console.log("Original feature count:", geoJsonData.features.length);
@@ -558,6 +580,7 @@
     
     // Add Bundesländer layer first (in the background)
     const bundeslaenderLayer = L.geoJSON(bundeslaenderData, {
+      pane: 'regionsPane',  // Use low z-index pane
       style: geoJsonStyle,
       interactive: false // No interaction with Bundesländer
     }).addTo(map);
@@ -576,16 +599,20 @@
     
     // Add Landkreise layer on top with interactivity
     const landkreiseLayer = L.geoJSON(landkreiseData, {
+      pane: 'regionsPane',  // Use low z-index pane for polygons
       style: geoJsonStyle,
       onEachFeature: function(feature, layer) {
         if (feature.properties) {
-          // Create tooltip
+          // Create tooltip using custom high z-index pane
           layer.bindTooltip(feature.properties.name, {
+            pane: 'frontTooltip',  // Use custom pane above all layers
             permanent: false,
             direction: 'top',
-            className: 'region-tooltip'
+            sticky: true,
+            className: 'region-tooltip',
+            opacity: 1
           });
-          
+
           // Create popup
           const popupContent = createPopupContent(feature);
           
@@ -595,6 +622,7 @@
           
           // Add special offset for northern regions to prevent popups from being cut off
           const popupOptions = {
+            pane: 'popupTop',  // Use dedicated top pane above everything
             maxWidth: 320,
             className: isNorthernRegion ? 'newspaper-popup northern-popup' : 'newspaper-popup',
             autoPan: false, // Prevent map from panning when popup opens
@@ -652,6 +680,19 @@
     map.whenReady(() => {
       map.invalidateSize(false);
       window.dispatchEvent(new Event('resize')); // mimics the devtools "fix"
+
+      // Clean up: Remove native title attributes from SVG paths
+      // (Native browser tooltips always render on top and conflict with Leaflet tooltips)
+      setTimeout(() => {
+        const pathsWithTitle = document.querySelectorAll('.regionsPane-pane svg path[title]');
+        pathsWithTitle.forEach(path => {
+          const title = path.getAttribute('title');
+          path.removeAttribute('title');
+          if (title) {
+            path.setAttribute('aria-label', title); // Preserve accessibility
+          }
+        });
+      }, 100);
     });
 
     // Also invalidate after moveend (after initial setView completes)

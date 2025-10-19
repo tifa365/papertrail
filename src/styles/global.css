@@ -276,3 +276,45 @@ h1 {
   }
 }
 
+/* CRITICAL FIX: Force HTML popups above SVG layers using CSS isolation */
+.leaflet-container {
+  position: relative;
+}
+
+/* ===================================================================
+   CUSTOM LEAFLET PANE SYSTEM
+   Explicit z-index hierarchy to ensure tooltips/popups appear above SVG
+   - regionsPane (200): SVG polygon layers
+   - frontTooltip (10000): Hover tooltips
+   - popupTop (10001): Click popups
+   =================================================================== */
+
+/* Low z-index pane for polygon regions */
+.leaflet-pane.regionsPane-pane {
+  z-index: 200 !important;
+  pointer-events: auto !important;
+}
+
+/* High z-index pane for hover tooltips */
+.leaflet-pane.frontTooltip-pane {
+  z-index: 10000 !important;
+  pointer-events: none !important; /* Don't block map interactions */
+}
+
+/* Tooltip styling */
+.leaflet-pane.frontTooltip-pane .leaflet-tooltip {
+  pointer-events: none !important;
+  background: white !important;
+  border: 1px solid #ccc !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+  font-size: 0.875rem !important;
+}
+
+/* Highest z-index pane for click popups */
+.leaflet-pane.popupTop-pane {
+  z-index: 10001 !important;
+  pointer-events: auto !important;
+}
+
