@@ -4,7 +4,6 @@ import SearchBox from "../components/SearchBox.astro";
 import GermanyMap from "../components/GermanyMap.astro";
 import RegionDetail from "../components/RegionDetail.astro";
 import Legend from "../components/Legend.astro";
-import TopRegions from "../components/TopRegions.astro";
 
 // Page metadata
 const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
@@ -37,11 +36,6 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
 
     <!-- Map Container -->
     <GermanyMap />
-
-    <!-- Top Regions Section -->
-    <div class="top-regions-section">
-      <TopRegions />
-    </div>
   </div>
 </MainLayout>
 
@@ -115,12 +109,8 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
     transform: translate(-50%, -50%) scale(0.95);
   }
 
-  .top-regions-section {
-    margin-bottom: 1rem;
-  }
-
   @media (max-width: 768px) {
-    .map-section, .top-regions-section {
+    .map-section {
       width: 100%;
     }
 
