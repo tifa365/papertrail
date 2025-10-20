@@ -32,3 +32,6 @@ pnpm-debug.log*
 archive/
 clean_zeitungen_data.py
 zeitungen_cleanup_todo.md
+
+# Claude Code configuration
+CLAUDE.md
