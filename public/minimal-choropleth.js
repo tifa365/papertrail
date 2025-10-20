@@ -256,25 +256,30 @@
         text-decoration: underline;
       }
       
-      /* High priority popup z-index */
+      /* High priority popup z-index - must be above legend (400) */
       .leaflet-popup-pane {
-        z-index: 9999 !important;
+        z-index: 999999 !important;
       }
-      
+
+      /* Force popup container to be on top */
+      .leaflet-pane.popupTop {
+        z-index: 999999 !important;
+      }
+
       .leaflet-popup {
         position: absolute;
         margin-bottom: 30px;
-        z-index: 9999 !important;
+        z-index: 999999 !important;
       }
-      
+
       .leaflet-popup-content-wrapper {
         border-radius: 8px;
         box-shadow: 0 3px 14px rgba(0,0,0,0.2);
-        z-index: 9999 !important;
+        z-index: 999999 !important;
       }
-      
+
       .leaflet-popup-content {
-        z-index: 9999 !important;
+        z-index: 999999 !important;
       }
       
       /* Prevent popups from affecting layout */
@@ -290,13 +295,13 @@
       
       /* Ensure popup tips are visible */
       .leaflet-popup-tip-container {
-        z-index: 9999 !important;
+        z-index: 999999 !important;
         pointer-events: none;
       }
       
       /* Professional close button styling */
       .leaflet-popup-close-button {
-        z-index: 10000 !important;
+        z-index: 999999 !important;
         width: 24px !important;
         height: 24px !important;
         background-color: #ffffff !important;
@@ -516,9 +521,9 @@
     frontTooltipPane.style.zIndex = '10000'; // Above all map content
     frontTooltipPane.style.pointerEvents = 'none'; // Don't block map interactions
 
-    // HIGHEST z pane for click popups (above tooltips)
+    // HIGHEST z pane for click popups (above tooltips AND legend)
     const popupTopPane = map.createPane('popupTop');
-    popupTopPane.style.zIndex = '10001';     // Above tooltips
+    popupTopPane.style.zIndex = '99999';     // Above tooltips and legend overlay
     popupTopPane.style.pointerEvents = 'auto';
     
     // ULTRA AGGRESSIVE Berlin handling - completely remove ALL Berlin districts

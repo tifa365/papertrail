@@ -4,9 +4,7 @@
 
 <div class="map-container">
   <div class="map-with-legend">
-    <div id="map" class="germany-map"></div>
-    
-    <!-- Desktop Legend Overlay -->
+    <!-- Desktop Legend Overlay - BEFORE map so map and popups appear on top -->
     <div class="legend-overlay">
       <div class="map-legend">
         <div class="legend-title">Legende</div>
@@ -36,6 +34,8 @@
         </div>
       </div>
     </div>
+
+    <div id="map" class="germany-map"></div>
   </div>
 </div>
 
@@ -93,11 +93,21 @@
     padding: 0;
     margin: 0;
     position: relative;
+    /* No z-index - let panes manage their own z-index globally */
   }
 
   /* Hide zoom controls */
   .leaflet-control-zoom {
     display: none !important;
+  }
+
+  /* Force all popup-related elements to appear above legend */
+  .leaflet-popup-pane,
+  .leaflet-pane[class*="popup"],
+  .leaflet-popup,
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip-container {
+    z-index: 999999 !important;
   }
 
   /* Remove border */
@@ -109,6 +119,8 @@
     padding: 0;
     margin: 0;
     position: relative;
+    /* Ensure this doesn't create a stacking context */
+    isolation: auto;
   }
 
   /* Map with legend layout */
@@ -116,6 +128,8 @@
     position: relative;
     width: 100%;
     height: 100%;
+    /* Ensure this doesn't create a stacking context */
+    isolation: auto;
   }
 
   /* Desktop legend overlay (positioned over map) */
@@ -123,8 +137,14 @@
     position: absolute;
     top: 20px;
     left: 120px;
-    z-index: 1000;
+    z-index: 400;  /* Above map base, but popups will appear higher */
     display: block;
+    pointer-events: none;  /* Allow clicks to pass through to map */
+  }
+
+  /* Allow clicks on legend content */
+  .legend-overlay .map-legend {
+    pointer-events: auto;
   }
 
   /* Mobile legend below map (hidden on desktop) */
