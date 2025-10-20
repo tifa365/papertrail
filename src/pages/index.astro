@@ -20,7 +20,18 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
       <div class="header">
         <div class="header-left">
           <h1>Papertrail</h1>
-          <div class="subtitle">LOKALE TAGESZEITUNGEN IN DEINEM LANDKREIS</div>
+          <div class="subtitle">
+            LOKALE TAGESZEITUNGEN IN DEINEM LANDKREIS
+            <span class="info-icon" title="Weitere Informationen">
+              ⓘ
+              <span class="info-popup">
+                <strong>Hinweise zu den Daten</strong><br>
+                • Die Daten können unvollständig sein<br>
+                • Eigene Zeitung hinzufügen? Kontakt folgt in Kürze<br>
+                • Es handelt sich ausschließlich um lokale Tageszeitungen, keine Werbe- oder überregionalen Zeitungen
+              </span>
+            </span>
+          </div>
           <div class="divider-container">
             <div class="divider"></div>
             <button class="collapse-arrow" id="collapseBtn" title="Header schließen">
@@ -107,6 +118,64 @@ const pageTitle = "Papertrail - Lokale Tageszeitungen in Deinem Landkreis";
 
   .collapse-arrow:active {
     transform: translate(-50%, -50%) scale(0.95);
+  }
+
+  /* Info Icon */
+  .info-icon {
+    position: relative;
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 14px;
+    color: #999;
+    cursor: default;
+    vertical-align: middle;
+    transition: color 0.2s ease;
+  }
+
+  .info-icon:hover {
+    color: #800000;
+  }
+
+  /* Info Popup */
+  .info-popup {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 120%;
+    top: -45px;
+    background: white;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    white-space: normal;
+    width: 450px;
+    font-size: 12px;
+    line-height: 1.4;
+    z-index: 10000;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    border: 1px solid #e0e0e0;
+    font-weight: normal;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .info-popup::after {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 48px;
+    border: 5px solid transparent;
+    border-right-color: white;
+  }
+
+  .info-icon:hover .info-popup {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .info-popup strong {
+    color: #800000;
   }
 
   @media (max-width: 768px) {
