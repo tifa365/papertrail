@@ -1231,34 +1231,27 @@
   },
   "3452": {
     "name": "Aurich",
-    "count": 4,
+    "count": 3,
     "zeitungen": [
       {
         "name": "Norderneyer Badezeitung",
         "verlag": "SKN Druck und Verlag GmbH",
         "erscheinungsort": "Norderney",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "https://norderneyer-badezeitung.de/"
       },
       {
         "name": "Ostfriesische Nachrichten",
         "verlag": "Ostfriesische Nachrichten GmbH",
         "erscheinungsort": "Aurich",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "https://www.on-online.de/-news/uebersicht"
       },
       {
         "name": "Ostfriesischer Kurier",
         "verlag": "Ostfriesischer Kurier GmbH & Co. KG",
         "erscheinungsort": "Norden",
-        "bundesland": "Bremen, Niedersachsen",
-        "website": "https://ostfriesischer-kurier.de/"
-      },
-      {
-        "name": "Ostheimer Zeitung",
-        "verlag": "Ostfriesischer Kurier GmbH & Co. KG",
-        "erscheinungsort": "Norden",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "https://ostfriesischer-kurier.de/"
       }
     ]
@@ -1331,42 +1324,28 @@
   },
   "3457": {
     "name": "Leer",
-    "count": 5,
+    "count": 3,
     "zeitungen": [
       {
         "name": "Borkumer Zeitung",
         "verlag": "ZGO Zeitungsgruppe Ostfriesland GmbH",
         "erscheinungsort": "Borkum",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "http://www.borkumer-zeitung.de/"
       },
       {
         "name": "General-Anzeiger (Ostfriesland)",
-        "verlag": "General-Anzeiger Bonn GmbH",
+        "verlag": "ZGO Zeitungsgruppe Ostfriesland GmbH",
         "erscheinungsort": "Rhauderfehn",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "https://www.ga-online.de/"
       },
       {
         "name": "Ostfriesen-Zeitung",
         "verlag": "ZGO Zeitungsgruppe Ostfriesland GmbH",
         "erscheinungsort": "Leer",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Niedersachsen",
         "website": "https://www.oz-online.de/-news/uebersicht"
-      },
-      {
-        "name": "Rhein-Erft-Rundschau",
-        "verlag": "Heinen-Verlag GmbH",
-        "erscheinungsort": "Brühl",
-        "bundesland": "Bremen, Niedersachsen",
-        "website": "https://www.rundschau-online.de/region/rhein-erft"
-      },
-      {
-        "name": "General-Anzeiger Bonn",
-        "verlag": "General-Anzeiger Bonn GmbH",
-        "erscheinungsort": "Bonn",
-        "bundesland": "Bremen, Niedersachsen",
-        "website": "https://www.general-anzeiger-bonn.de/"
       }
     ]
   },
@@ -1867,7 +1846,7 @@
         "name": "General-Anzeiger Bonn",
         "verlag": "General-Anzeiger Bonn GmbH",
         "erscheinungsort": "Bonn",
-        "bundesland": "Bremen, Niedersachsen",
+        "bundesland": "Nordrhein-Westfalen",
         "website": "https://www.general-anzeiger-bonn.de/"
       },
       {
