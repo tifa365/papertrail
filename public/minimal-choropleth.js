@@ -463,7 +463,8 @@
   // --- Load Newspaper Data ---
   async function loadNewspaperData() {
     try {
-      const response = await fetch('/zeitungen_by_ags.json');
+      const basePath = window.BASE_PATH || '/';
+      const response = await fetch(basePath + 'zeitungen_by_ags.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
