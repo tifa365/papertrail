@@ -2,7 +2,7 @@
 
 **Papertrail ist eine Open-Source-Anwendung, die Lokalzeitungen in Deutschland auf einer interaktiven Karte nach Landkreis visualisiert.**
 
-Die App basiert auf dem Zeitungsverzeichnis des Bundesverband Digitalpublisher und Zeitungsverleger (BDZV) und wurde durch eigene Recherchen ergänzt. Die Datengrundlage erhebt keinen Anspruch auf Vollständigkeit – sie umfasst ausschließlich Zeitungen, die an der ma (Media Analyse) teilnehmen.
+Die App basiert auf dem Zeitungsverzeichnis des Bundesverband Digitalpublisher und Zeitungsverleger (BDZV) und wurde durch eigene Recherchen ergänzt. Die Datengrundlage erhebt keinen Anspruch auf Vollständigkeit – sie umfasst größtenteils Zeitungen, die an der ma (Media Analyse) teilnehmen.
 
 ## Zeitung hinzufügen oder korrigieren
 
