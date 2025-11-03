@@ -31,4 +31,3 @@ npm run preview      # Build lokal testen
 
 - `public/zeitungen_by_ags.json` - Hauptdatei (nach AGS indexiert)
 - `public/geodata.js` - GeoJSON für deutsche Landkreise
-- Details zur Datenstruktur siehe [CLAUDE.md](CLAUDE.md)
