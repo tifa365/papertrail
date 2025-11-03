@@ -7272,21 +7272,28 @@
   },
   "9574": {
     "name": "Nürnberger Land",
-    "count": 2,
+    "count": 3,
     "zeitungen": [
       {
         "name": "Hersbrucker Zeitung",
-        "verlag": "Verlag Nürnberger Presse Druckhaus Nürnberg GmbH & Co. KG",
+        "verlag": "Hersbrucker Zeitung GmbH Verlag und Medienservice",
         "erscheinungsort": "Hersbruck",
         "bundesland": "Bayern",
         "website": "https://n-land.de/lokales/nuernberger-land"
       },
       {
         "name": "Pegnitz-Zeitung",
-        "verlag": "Verlag Nürnberger Presse Druckhaus Nürnberg GmbH & Co. KG",
+        "verlag": "Pegnitz-Zeitung Verlag Hans Fahner GmbH & Co. KG",
         "erscheinungsort": "Lauf an der Pegnitz",
         "bundesland": "Bayern",
         "website": "https://www.nn.de/region/pegnitz"
+      },
+      {
+        "name": "Der Bote",
+        "verlag": "Verlag „Der Bote“ Hanns Bollmann GmbH & Co.",
+        "erscheinungsort": "Feucht",
+        "bundesland": "Bayern",
+        "website": "https://n-land.de/lokales/nuernberger-land"
       }
     ]
   },
