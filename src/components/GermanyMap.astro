@@ -1,5 +1,7 @@
 ---
-
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
 ---
 
 <div class="map-container">
@@ -69,24 +71,18 @@
   </div>
 </div>
 
-<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-></script>
 <link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
-<script is:inline define:vars={{ basePath: import.meta.env.BASE_URL }}>
-  window.BASE_PATH = basePath.endsWith('/') ? basePath : basePath + '/';
-  const script1 = document.createElement('script');
-  script1.src = window.BASE_PATH + 'geodata.js';
-  document.head.appendChild(script1);
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 
-  script1.onload = () => {
-    const script2 = document.createElement('script');
-    script2.src = window.BASE_PATH + 'minimal-choropleth.js';
-    document.head.appendChild(script2);
-  };
+<script is:inline define:vars={{ basePath: base }}>
+  window.BASE_PATH = basePath;
 </script>
+
+<script src={base + 'geodata.js'} defer></script>
+<script src={base + 'minimal-choropleth.js'} defer></script>
 
 <style>
   html,
