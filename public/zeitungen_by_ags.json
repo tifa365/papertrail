@@ -3202,15 +3202,8 @@
   },
   "6411": {
     "name": "Darmstadt",
-    "count": 2,
+    "count": 1,
     "zeitungen": [
-      {
-        "name": "Bürstädter Zeitung",
-        "verlag": "VRM GmbH & Co. KG",
-        "erscheinungsort": "Bürstadt",
-        "bundesland": "Hessen",
-        "website": "https://www.buerstaedter-zeitung.de/"
-      },
       {
         "name": "Darmstädter Echo",
         "verlag": "Echo Medien GmbH",

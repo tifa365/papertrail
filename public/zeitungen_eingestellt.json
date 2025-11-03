@@ -1,0 +1,16 @@
+{
+  "6431": {
+    "name": "Bergstraße",
+    "zeitungen": [
+      {
+        "name": "Bürstädter Zeitung",
+        "verlag": "VRM GmbH & Co. KG",
+        "erscheinungsort": "Bürstadt",
+        "bundesland": "Hessen",
+        "website": "https://www.echo-online.de/",
+        "eingestelltAm": "2025-01-01",
+        "anmerkung": "Mit Starkenburger Echo vereint"
+      }
+    ]
+  }
+}
