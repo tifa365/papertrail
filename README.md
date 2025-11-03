@@ -10,7 +10,7 @@ Da sowohl Code als auch Datenbasis offen zugänglich sind, kann jeder fehlende Z
 
 1. **Datei bearbeiten**: `public/zeitungen_by_ags.json`
 2. **Format**: Strukturiert nach AGS-Code (Amtlicher Gemeindeschlüssel)
-3. **Pull Request erstellen**: Änderungen über GitHub einreichen
+3. **Pull Request**
 
 ## 🚀 Development
 
