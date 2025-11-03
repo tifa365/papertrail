@@ -627,7 +627,7 @@
   },
   "3158": {
     "name": "Wolfenbüttel",
-    "count": 1,
+    "count": 2,
     "zeitungen": [
       {
         "name": "Wolfenbütteler Zeitung",
@@ -635,6 +635,13 @@
         "erscheinungsort": "Wolfenbüttel",
         "bundesland": "Niedersachsen",
         "website": "https://www.wolfenbuetteler-zeitung.de/"
+      },
+      {
+        "name": "Wolfenbütteler Schaufenster",
+        "verlag": "Schaufenster GmbH & Co. KG",
+        "erscheinungsort": "Wolfenbüttel",
+        "bundesland": "Niedersachsen",
+        "website": "https://www.schaufenster-wf.de/"
       }
     ]
   },
