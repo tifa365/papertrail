@@ -11,7 +11,19 @@ permissions:
   id-token: write
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON data files
+        run: |
+          echo "Validating JSON files..."
+          python3 -m json.tool public/zeitungen_by_ags.json > /dev/null || (echo "❌ zeitungen_by_ags.json is invalid!" && exit 1)
+          python3 -m json.tool public/zeitungen_eingestellt.json > /dev/null || (echo "❌ zeitungen_eingestellt.json is invalid!" && exit 1)
+          echo "✅ All JSON files are valid"
+
   build:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
