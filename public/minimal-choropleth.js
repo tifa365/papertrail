@@ -846,5 +846,10 @@
   }
 
   // --- Initialize on DOM Ready ---
-  document.addEventListener('DOMContentLoaded', loadData);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadData);
+  } else {
+    // DOM is already ready, execute immediately
+    loadData();
+  }
 })();
