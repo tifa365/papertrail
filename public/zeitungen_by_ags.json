@@ -4570,10 +4570,10 @@
       },
       {
         "name": "Neue Württembergische Zeitung",
-        "verlag": "Senner Verlag GmbH",
-        "erscheinungsort": "Nürtingen",
+        "verlag": "Neue Pressegesellschaft mbH & Co. KG SÜDWEST PRESSE",
+        "erscheinungsort": "Göppingen",
         "bundesland": "Baden-Württemberg",
-        "website": "https://www.ntz.de/startseite/"
+        "website": "https://www.swp.de/lokales/goeppingen/"
       },
       {
         "name": "Nürtinger Zeitung",
@@ -4600,14 +4600,21 @@
   },
   "8117": {
     "name": "Göppingen",
-    "count": 2,
+    "count": 3,
     "zeitungen": [
+      {
+        "name": "Neue Württembergische Zeitung",
+        "verlag": "Neue Pressegesellschaft mbH & Co. KG SÜDWEST PRESSE",
+        "erscheinungsort": "Göppingen",
+        "bundesland": "Baden-Württemberg",
+        "website": "https://www.swp.de/lokales/goeppingen/"
+      },
       {
         "name": "Geislinger Zeitung",
         "verlag": "Neue Pressegesellschaft mbH & Co. KG SÜDWEST PRESSE",
         "erscheinungsort": "Geislingen",
         "bundesland": "Baden-Württemberg",
-        "website": "https://www.swp.de/suedwesten/staedte/geislingen/"
+        "website": "https://www.swp.de/lokales/geislingen/"
       },
       {
         "name": "Stuttgarter Zeitung",
